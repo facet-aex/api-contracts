@@ -6,4 +6,4 @@ Versioned FACET interface contracts: JSON Schema, OpenAPI descriptions, error en
 **Important:** “contracts” means service/data contracts, not smart contracts.
 **Boundary:** Contains no database access, business rules, provider secrets or chain logic.
 
-This repository is the standalone source of versioned public interface artifacts. Consumers use a published package or pinned release; they must not reference this repository through a sibling filesystem path. Breaking changes require a new contract version, compatibility tests and a documented producer/consumer migration order.
+This standalone npm repository owns its `package-lock.json` and versioned public interface artifacts. Consumers use a published package or pinned release; they must not reference this repository through a sibling filesystem path. Breaking changes require a new contract version, compatibility tests and a documented producer/consumer migration order.
