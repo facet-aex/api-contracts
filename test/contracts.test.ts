@@ -6,6 +6,7 @@ import {
   CONTRACT_VERSION,
   ERROR_SCHEMA_ID,
   HEALTH_SCHEMA_ID,
+  PUBLIC_PROVIDER_SCHEMA_ID,
 } from "../src/index.js";
 
 async function readSchema(name: string): Promise<Record<string, unknown>> {
@@ -17,9 +18,20 @@ describe("public contracts", () => {
   it("keeps the package and schema identifiers explicitly versioned", async () => {
     const errorSchema = await readSchema("error-envelope.v0.1.json");
     const healthSchema = await readSchema("health-status.v0.1.json");
+    const providerSchema = await readSchema("public-provider.v0.2.json");
 
-    expect(CONTRACT_VERSION).toBe("0.1.0");
+    expect(CONTRACT_VERSION).toBe("0.2.0");
     expect(errorSchema.$id).toBe(ERROR_SCHEMA_ID);
     expect(healthSchema.$id).toBe(HEALTH_SCHEMA_ID);
+    expect(providerSchema.$id).toBe(PUBLIC_PROVIDER_SCHEMA_ID);
+  });
+
+  it("keeps authentication and membership data out of the public provider", async () => {
+    const providerSchema = await readSchema("public-provider.v0.2.json");
+    const properties = providerSchema.properties as Record<string, unknown>;
+
+    expect(properties).not.toHaveProperty("externalSubject");
+    expect(properties).not.toHaveProperty("role");
+    expect(properties).not.toHaveProperty("credentials");
   });
 });

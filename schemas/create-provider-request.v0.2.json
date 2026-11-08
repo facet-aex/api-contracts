@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/create-provider-request.v0.2.json",
+  "title": "Create provider request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["slug", "name"],
+  "properties": {
+    "slug": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 63,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "description": { "type": "string", "maxLength": 2000 },
+    "websiteUrl": { "type": "string", "format": "uri", "maxLength": 2048 },
+    "contact": { "type": "string", "maxLength": 320 },
+    "walletAddress": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{40}$"
+    }
+  }
+}

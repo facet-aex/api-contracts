@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/update-provider-request.v0.2.json",
+  "title": "Update provider request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "description": { "type": "string", "maxLength": 2000 },
+    "websiteUrl": {
+      "anyOf": [
+        { "type": "string", "format": "uri", "maxLength": 2048 },
+        { "type": "null" }
+      ]
+    },
+    "contact": {
+      "anyOf": [{ "type": "string", "maxLength": 320 }, { "type": "null" }]
+    },
+    "walletAddress": {
+      "anyOf": [
+        { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" },
+        { "type": "null" }
+      ]
+    }
+  },
+  "anyOf": [
+    { "required": ["name"] },
+    { "required": ["description"] },
+    { "required": ["websiteUrl"] },
+    { "required": ["contact"] },
+    { "required": ["walletAddress"] }
+  ]
+}
