@@ -7,3 +7,12 @@ Versioned FACET interface contracts: JSON Schema, OpenAPI descriptions, error en
 **Boundary:** Contains no database access, business rules, provider secrets or chain logic.
 
 This standalone npm repository owns its `package-lock.json` and versioned public interface artifacts. Consumers use a published package or pinned release; they must not reference this repository through a sibling filesystem path. Breaking changes require a new contract version, compatibility tests and a documented producer/consumer migration order.
+
+## Local verification
+
+```bash
+npm ci
+npm run verify
+```
+
+The package is currently pre-release infrastructure. Do not publish it until the first producer/consumer compatibility review is complete.
