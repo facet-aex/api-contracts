@@ -27,13 +27,22 @@ export type {
   UpdateProviderRequest,
 } from "./provider.js";
 export type {
+  CreateFacetDraftSelection,
+  CreateFacetDraftsRequest,
+  CreateFacetDraftsResponse,
+  FacetDraft,
+  FacetDraftVersion,
+  SideEffectClass,
+} from "./facet-drafts.js";
+export { SIDE_EFFECT_CLASSES } from "./facet-drafts.js";
+export type {
   ImporterOperationCandidate,
   ImporterParseRequest,
   ImporterParseResponse,
   OpenApiImportLimits,
 } from "./openapi-importer.js";
 
-export const CONTRACT_VERSION = "0.4.0" as const;
+export const CONTRACT_VERSION = "0.5.0" as const;
 export const ERROR_SCHEMA_ID =
   "https://facet.local/schemas/error-envelope.v0.1.json" as const;
 export const HEALTH_SCHEMA_ID =
@@ -46,3 +55,7 @@ export const IMPORTER_PARSE_REQUEST_SCHEMA_ID =
   "https://facet.local/schemas/importer-parse-request.v0.4.json" as const;
 export const IMPORTER_PARSE_RESPONSE_SCHEMA_ID =
   "https://facet.local/schemas/importer-parse-response.v0.4.json" as const;
+export const CREATE_FACET_DRAFTS_REQUEST_SCHEMA_ID =
+  "https://facet.local/schemas/create-facet-drafts-request.v0.5.json" as const;
+export const CREATE_FACET_DRAFTS_RESPONSE_SCHEMA_ID =
+  "https://facet.local/schemas/create-facet-drafts-response.v0.5.json" as const;

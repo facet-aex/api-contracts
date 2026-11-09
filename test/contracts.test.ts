@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   CONTRACT_VERSION,
+  CREATE_FACET_DRAFTS_REQUEST_SCHEMA_ID,
+  CREATE_FACET_DRAFTS_RESPONSE_SCHEMA_ID,
   ERROR_SCHEMA_ID,
   HEALTH_SCHEMA_ID,
   IMPORTER_PARSE_REQUEST_SCHEMA_ID,
@@ -29,14 +31,50 @@ describe("public contracts", () => {
     const importerResponseSchema = await readSchema(
       "importer-parse-response.v0.4.json",
     );
+    const createFacetDraftsRequestSchema = await readSchema(
+      "create-facet-drafts-request.v0.5.json",
+    );
+    const createFacetDraftsResponseSchema = await readSchema(
+      "create-facet-drafts-response.v0.5.json",
+    );
 
-    expect(CONTRACT_VERSION).toBe("0.4.0");
+    expect(CONTRACT_VERSION).toBe("0.5.0");
     expect(errorSchema.$id).toBe(ERROR_SCHEMA_ID);
     expect(healthSchema.$id).toBe(HEALTH_SCHEMA_ID);
     expect(providerSchema.$id).toBe(PUBLIC_PROVIDER_SCHEMA_ID);
     expect(membershipSchema.$id).toBe(PROVIDER_MEMBERSHIP_SCHEMA_ID);
     expect(importerRequestSchema.$id).toBe(IMPORTER_PARSE_REQUEST_SCHEMA_ID);
     expect(importerResponseSchema.$id).toBe(IMPORTER_PARSE_RESPONSE_SCHEMA_ID);
+    expect(createFacetDraftsRequestSchema.$id).toBe(
+      CREATE_FACET_DRAFTS_REQUEST_SCHEMA_ID,
+    );
+    expect(createFacetDraftsResponseSchema.$id).toBe(
+      CREATE_FACET_DRAFTS_RESPONSE_SCHEMA_ID,
+    );
+  });
+
+  it("defines an atomic operation-selection batch without credential fields", async () => {
+    const requestSchema = await readSchema(
+      "create-facet-drafts-request.v0.5.json",
+    );
+    const responseSchema = await readSchema(
+      "create-facet-drafts-response.v0.5.json",
+    );
+    const requestText = JSON.stringify(requestSchema);
+    const responseText = JSON.stringify(responseSchema);
+
+    expect(requestSchema.required).toEqual([
+      "providerId",
+      "importJobId",
+      "selections",
+    ]);
+    expect(requestText).toContain("operationCandidateId");
+    expect(requestText).toContain("sideEffectClass");
+    expect(responseText).toContain("sourceOperationPointer");
+    expect(responseText).toContain("contentHash");
+    expect(`${requestText}${responseText}`).not.toMatch(
+      /baseUrl|secretRef|credential|apiKey|bearerToken/iu,
+    );
   });
 
   it("keeps authentication and membership data out of the public provider", async () => {

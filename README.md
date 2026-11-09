@@ -1,6 +1,6 @@
 # FACET Contracts
 
-Versioned FACET interface contracts: JSON Schema, OpenAPI descriptions, error envelopes and generated TypeScript types. Version 0.4 adds the internal Control API ↔ OpenAPI importer parse request/response contract, including immutable snapshot content and stable operation JSON Pointers.
+Versioned FACET interface contracts: JSON Schema, OpenAPI descriptions, error envelopes and generated TypeScript types. Version 0.5 adds the atomic operation-selection command and response used to create provider-private Facet drafts. The importer v0.4 contract remains unchanged.
 
 **Phase:** 1 — active.
 **Important:** “contracts” means service/data contracts, not smart contracts.
