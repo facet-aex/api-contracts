@@ -18,15 +18,21 @@ export interface FacetApiError {
 
 export type {
   CreateProviderRequest,
+  CurrentUser,
+  ProviderMembership,
+  ProviderRole,
   ProviderStatus,
   PublicProvider,
+  UpdateProviderMembershipRequest,
   UpdateProviderRequest,
 } from "./provider.js";
 
-export const CONTRACT_VERSION = "0.2.0" as const;
+export const CONTRACT_VERSION = "0.3.0" as const;
 export const ERROR_SCHEMA_ID =
   "https://facet.local/schemas/error-envelope.v0.1.json" as const;
 export const HEALTH_SCHEMA_ID =
   "https://facet.local/schemas/health-status.v0.1.json" as const;
 export const PUBLIC_PROVIDER_SCHEMA_ID =
   "https://facet.local/schemas/public-provider.v0.2.json" as const;
+export const PROVIDER_MEMBERSHIP_SCHEMA_ID =
+  "https://facet.local/schemas/provider-membership.v0.3.json" as const;

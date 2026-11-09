@@ -1,4 +1,5 @@
 export type ProviderStatus = "active" | "disabled";
+export type ProviderRole = "owner" | "admin" | "developer" | "viewer";
 
 export interface PublicProvider {
   id: string;
@@ -30,4 +31,21 @@ export interface UpdateProviderRequest {
   websiteUrl?: string | null;
   contact?: string | null;
   walletAddress?: string | null;
+}
+
+export interface CurrentUser {
+  id: string;
+  email: string | null;
+  displayName: string | null;
+}
+
+export interface ProviderMembership {
+  user: CurrentUser;
+  role: ProviderRole;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UpdateProviderMembershipRequest {
+  role: ProviderRole;
 }

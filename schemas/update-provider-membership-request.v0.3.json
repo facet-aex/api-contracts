@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/update-provider-membership-request.v0.3.json",
+  "title": "Update provider membership request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["role"],
+  "properties": {
+    "role": { "enum": ["owner", "admin", "developer", "viewer"] }
+  }
+}
