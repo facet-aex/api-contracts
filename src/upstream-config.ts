@@ -1,0 +1,63 @@
+export const SECRET_KINDS = ["API_KEY", "BEARER_TOKEN"] as const;
+export type SecretKind = (typeof SECRET_KINDS)[number];
+
+export interface CreateSecretRequest {
+  kind: SecretKind;
+  label: string;
+  value: string;
+}
+
+export interface RotateSecretRequest {
+  value: string;
+}
+
+export interface SecretRefMetadata {
+  id: string;
+  providerId: string;
+  kind: SecretKind;
+  label: string;
+  status: "ACTIVE" | "REVOKED";
+  usageCount: number;
+  createdAt: string;
+  rotatedAt: string | null;
+}
+
+export interface SecretRefResponse {
+  secret: SecretRefMetadata;
+}
+
+export type EndpointAuthKind =
+  "NONE" | "API_KEY_HEADER" | "API_KEY_QUERY" | "BEARER";
+
+export interface EndpointConfigRequest {
+  version: number;
+  baseUrl: string;
+  auth: {
+    kind: EndpointAuthKind;
+    secretRefId?: string;
+    parameterName?: string;
+  };
+  timeoutMs: number;
+  maxResponseBytes: number;
+  redirectPolicy: "DENY" | "SAME_ORIGIN";
+}
+
+export interface EndpointConfigMetadata {
+  id: string;
+  facetVersionId: string;
+  baseUrlConfigured: true;
+  method: string;
+  pathTemplate: string;
+  authKind: EndpointAuthKind;
+  secretRefId: string | null;
+  timeoutMs: number;
+  maxResponseBytes: number;
+  redirectPolicy: "DENY" | "SAME_ORIGIN";
+  version: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EndpointConfigResponse {
+  endpointConfig: EndpointConfigMetadata;
+}

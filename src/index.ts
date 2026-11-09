@@ -36,6 +36,18 @@ export type {
 } from "./facet-drafts.js";
 export { SIDE_EFFECT_CLASSES } from "./facet-drafts.js";
 export type {
+  CreateSecretRequest,
+  EndpointAuthKind,
+  EndpointConfigMetadata,
+  EndpointConfigRequest,
+  EndpointConfigResponse,
+  RotateSecretRequest,
+  SecretKind,
+  SecretRefMetadata,
+  SecretRefResponse,
+} from "./upstream-config.js";
+export { SECRET_KINDS } from "./upstream-config.js";
+export type {
   ImporterOperationCandidate,
   ImporterParseRequest,
   ImporterParseResponse,
@@ -48,7 +60,7 @@ export type {
   OpenApiImportLimits,
 } from "./openapi-importer.js";
 
-export const CONTRACT_VERSION = "0.6.0" as const;
+export const CONTRACT_VERSION = "0.7.0" as const;
 export const ERROR_SCHEMA_ID =
   "https://facet.local/schemas/error-envelope.v0.1.json" as const;
 export const HEALTH_SCHEMA_ID =
@@ -65,3 +77,13 @@ export const CREATE_FACET_DRAFTS_REQUEST_SCHEMA_ID =
   "https://facet.local/schemas/create-facet-drafts-request.v0.5.json" as const;
 export const CREATE_FACET_DRAFTS_RESPONSE_SCHEMA_ID =
   "https://facet.local/schemas/create-facet-drafts-response.v0.5.json" as const;
+export const CREATE_SECRET_REQUEST_SCHEMA_ID =
+  "https://facet.local/schemas/create-secret-request.v0.7.json" as const;
+export const ROTATE_SECRET_REQUEST_SCHEMA_ID =
+  "https://facet.local/schemas/rotate-secret-request.v0.7.json" as const;
+export const SECRET_REF_RESPONSE_SCHEMA_ID =
+  "https://facet.local/schemas/secret-ref-response.v0.7.json" as const;
+export const ENDPOINT_CONFIG_REQUEST_SCHEMA_ID =
+  "https://facet.local/schemas/endpoint-config-request.v0.7.json" as const;
+export const ENDPOINT_CONFIG_RESPONSE_SCHEMA_ID =
+  "https://facet.local/schemas/endpoint-config-response.v0.7.json" as const;

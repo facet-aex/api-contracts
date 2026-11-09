@@ -6,12 +6,16 @@ import {
   CONTRACT_VERSION,
   CREATE_FACET_DRAFTS_REQUEST_SCHEMA_ID,
   CREATE_FACET_DRAFTS_RESPONSE_SCHEMA_ID,
+  CREATE_SECRET_REQUEST_SCHEMA_ID,
   ERROR_SCHEMA_ID,
   HEALTH_SCHEMA_ID,
   IMPORTER_PARSE_REQUEST_SCHEMA_ID,
   IMPORTER_PARSE_RESPONSE_SCHEMA_ID,
+  ENDPOINT_CONFIG_REQUEST_SCHEMA_ID,
   PROVIDER_MEMBERSHIP_SCHEMA_ID,
   PUBLIC_PROVIDER_SCHEMA_ID,
+  ROTATE_SECRET_REQUEST_SCHEMA_ID,
+  SECRET_REF_RESPONSE_SCHEMA_ID,
 } from "../src/index.js";
 
 async function readSchema(name: string): Promise<Record<string, unknown>> {
@@ -37,8 +41,20 @@ describe("public contracts", () => {
     const createFacetDraftsResponseSchema = await readSchema(
       "create-facet-drafts-response.v0.5.json",
     );
+    const createSecretSchema = await readSchema(
+      "create-secret-request.v0.7.json",
+    );
+    const rotateSecretSchema = await readSchema(
+      "rotate-secret-request.v0.7.json",
+    );
+    const secretResponseSchema = await readSchema(
+      "secret-ref-response.v0.7.json",
+    );
+    const endpointConfigSchema = await readSchema(
+      "endpoint-config-request.v0.7.json",
+    );
 
-    expect(CONTRACT_VERSION).toBe("0.6.0");
+    expect(CONTRACT_VERSION).toBe("0.7.0");
     expect(errorSchema.$id).toBe(ERROR_SCHEMA_ID);
     expect(healthSchema.$id).toBe(HEALTH_SCHEMA_ID);
     expect(providerSchema.$id).toBe(PUBLIC_PROVIDER_SCHEMA_ID);
@@ -50,6 +66,29 @@ describe("public contracts", () => {
     );
     expect(createFacetDraftsResponseSchema.$id).toBe(
       CREATE_FACET_DRAFTS_RESPONSE_SCHEMA_ID,
+    );
+    expect(createSecretSchema.$id).toBe(CREATE_SECRET_REQUEST_SCHEMA_ID);
+    expect(rotateSecretSchema.$id).toBe(ROTATE_SECRET_REQUEST_SCHEMA_ID);
+    expect(secretResponseSchema.$id).toBe(SECRET_REF_RESPONSE_SCHEMA_ID);
+    expect(endpointConfigSchema.$id).toBe(ENDPOINT_CONFIG_REQUEST_SCHEMA_ID);
+  });
+
+  it("defines write-only secret and protected endpoint configuration contracts", async () => {
+    const createSecret = await readSchema("create-secret-request.v0.7.json");
+    const rotateSecret = await readSchema("rotate-secret-request.v0.7.json");
+    const secretResponse = await readSchema("secret-ref-response.v0.7.json");
+    const endpointConfig = await readSchema(
+      "endpoint-config-request.v0.7.json",
+    );
+
+    expect(createSecret.required).toEqual(["kind", "label", "value"]);
+    expect(rotateSecret.required).toEqual(["value"]);
+    expect(JSON.stringify(createSecret)).toContain("BEARER_TOKEN");
+    expect(JSON.stringify(endpointConfig)).toContain("API_KEY_QUERY");
+    expect(JSON.stringify(endpointConfig)).toContain("secretRefId");
+    expect(JSON.stringify(secretResponse)).not.toContain('"value"');
+    expect(JSON.stringify(secretResponse)).not.toMatch(
+      /vaultReference|filesystem|path/iu,
     );
   });
 

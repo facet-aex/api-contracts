@@ -8,6 +8,8 @@ Versioned FACET interface contracts: JSON Schema, OpenAPI descriptions, error en
 
 This standalone npm repository owns its `package-lock.json` and versioned public interface artifacts. Consumers use a published package or pinned release; they must not reference this repository through a sibling filesystem path. Breaking changes require a new contract version, compatibility tests and a documented producer/consumer migration order.
 
+Contract `0.7.0` adds write-only API-key/Bearer secret commands plus protected draft endpoint-configuration request/metadata schemas. Secret responses intentionally exclude the value and vault/storage reference; endpoint responses intentionally exclude the protected base URL.
+
 ## Local verification
 
 ```bash

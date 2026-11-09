@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/endpoint-config-response.v0.7.json",
+  "title": "EndpointConfigResponse",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["endpointConfig"],
+  "properties": {
+    "endpointConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "facetVersionId",
+        "baseUrlConfigured",
+        "method",
+        "pathTemplate",
+        "authKind",
+        "secretRefId",
+        "timeoutMs",
+        "maxResponseBytes",
+        "redirectPolicy",
+        "version",
+        "createdAt",
+        "updatedAt"
+      ],
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "facetVersionId": { "type": "string", "format": "uuid" },
+        "baseUrlConfigured": { "const": true },
+        "method": { "type": "string" },
+        "pathTemplate": { "type": "string" },
+        "authKind": {
+          "enum": ["NONE", "API_KEY_HEADER", "API_KEY_QUERY", "BEARER"]
+        },
+        "secretRefId": {
+          "anyOf": [{ "type": "string", "format": "uuid" }, { "type": "null" }]
+        },
+        "timeoutMs": { "type": "integer" },
+        "maxResponseBytes": { "type": "integer" },
+        "redirectPolicy": { "enum": ["DENY", "SAME_ORIGIN"] },
+        "version": { "type": "integer", "minimum": 1 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}
