@@ -12,6 +12,7 @@
       "required": [
         "id",
         "facetVersionId",
+        "facetVersionVersion",
         "baseUrlConfigured",
         "method",
         "pathTemplate",
@@ -27,6 +28,7 @@
       "properties": {
         "id": { "type": "string", "format": "uuid" },
         "facetVersionId": { "type": "string", "format": "uuid" },
+        "facetVersionVersion": { "type": "integer", "minimum": 1 },
         "baseUrlConfigured": { "const": true },
         "method": { "type": "string" },
         "pathTemplate": { "type": "string" },

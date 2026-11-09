@@ -16,16 +16,38 @@
     "version": { "type": "integer", "minimum": 1 },
     "baseUrl": { "type": "string", "format": "uri", "maxLength": 2048 },
     "auth": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["kind"],
-      "properties": {
-        "kind": {
-          "enum": ["NONE", "API_KEY_HEADER", "API_KEY_QUERY", "BEARER"]
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "NONE" } }
         },
-        "secretRefId": { "type": "string", "format": "uuid" },
-        "parameterName": { "type": "string", "minLength": 1, "maxLength": 120 }
-      }
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "secretRefId"],
+          "properties": {
+            "kind": { "const": "BEARER" },
+            "secretRefId": { "type": "string", "format": "uuid" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "secretRefId", "parameterName"],
+          "properties": {
+            "kind": { "enum": ["API_KEY_HEADER", "API_KEY_QUERY"] },
+            "secretRefId": { "type": "string", "format": "uuid" },
+            "parameterName": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120,
+              "pattern": "^[A-Za-z0-9._~-]+$"
+            }
+          }
+        }
+      ]
     },
     "timeoutMs": { "type": "integer", "minimum": 100, "maximum": 60000 },
     "maxResponseBytes": {

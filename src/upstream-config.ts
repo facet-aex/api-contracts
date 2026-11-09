@@ -45,6 +45,7 @@ export interface EndpointConfigRequest {
 export interface EndpointConfigMetadata {
   id: string;
   facetVersionId: string;
+  facetVersionVersion: number;
   baseUrlConfigured: true;
   method: string;
   pathTemplate: string;

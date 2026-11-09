@@ -86,6 +86,7 @@ describe("public contracts", () => {
     expect(JSON.stringify(createSecret)).toContain("BEARER_TOKEN");
     expect(JSON.stringify(endpointConfig)).toContain("API_KEY_QUERY");
     expect(JSON.stringify(endpointConfig)).toContain("secretRefId");
+    expect(JSON.stringify(endpointConfig)).toContain("oneOf");
     expect(JSON.stringify(secretResponse)).not.toContain('"value"');
     expect(JSON.stringify(secretResponse)).not.toMatch(
       /vaultReference|filesystem|path/iu,
