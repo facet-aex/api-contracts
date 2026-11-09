@@ -1,6 +1,6 @@
 # FACET Contracts
 
-Versioned FACET interface contracts: JSON Schema, OpenAPI descriptions, error envelopes and generated TypeScript types. Version 0.5 adds the atomic operation-selection command and response used to create provider-private Facet drafts. The importer v0.4 contract remains unchanged.
+Versioned FACET interface contracts: JSON Schema, OpenAPI descriptions, error envelopes and generated TypeScript types. Version 0.6 enriches the importer response with manifest-ready input/output/error schemas, private server templates, auth alternatives and per-operation warnings. The v0.5 atomic Facet-draft command remains unchanged.
 
 **Phase:** 1 — active.
 **Important:** “contracts” means service/data contracts, not smart contracts.

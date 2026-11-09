@@ -26,10 +26,10 @@ describe("public contracts", () => {
     const providerSchema = await readSchema("public-provider.v0.2.json");
     const membershipSchema = await readSchema("provider-membership.v0.3.json");
     const importerRequestSchema = await readSchema(
-      "importer-parse-request.v0.4.json",
+      "importer-parse-request.v0.6.json",
     );
     const importerResponseSchema = await readSchema(
-      "importer-parse-response.v0.4.json",
+      "importer-parse-response.v0.6.json",
     );
     const createFacetDraftsRequestSchema = await readSchema(
       "create-facet-drafts-request.v0.5.json",
@@ -38,7 +38,7 @@ describe("public contracts", () => {
       "create-facet-drafts-response.v0.5.json",
     );
 
-    expect(CONTRACT_VERSION).toBe("0.5.0");
+    expect(CONTRACT_VERSION).toBe("0.6.0");
     expect(errorSchema.$id).toBe(ERROR_SCHEMA_ID);
     expect(healthSchema.$id).toBe(HEALTH_SCHEMA_ID);
     expect(providerSchema.$id).toBe(PUBLIC_PROVIDER_SCHEMA_ID);
@@ -50,6 +50,37 @@ describe("public contracts", () => {
     );
     expect(createFacetDraftsResponseSchema.$id).toBe(
       CREATE_FACET_DRAFTS_RESPONSE_SCHEMA_ID,
+    );
+  });
+
+  it("defines normalized operation candidates without provider secret values", async () => {
+    const responseSchema = await readSchema(
+      "importer-parse-response.v0.6.json",
+    );
+    const candidate = (
+      responseSchema.properties as {
+        candidates: { items: { required: string[]; properties: unknown } };
+      }
+    ).candidates.items;
+    const serialized = JSON.stringify(responseSchema);
+
+    expect(candidate.required).toEqual([
+      "candidateId",
+      "jsonPointer",
+      "method",
+      "path",
+      "tags",
+      "normalized",
+      "warnings",
+    ]);
+    expect(serialized).toContain("inputSchema");
+    expect(serialized).toContain("outputSchema");
+    expect(serialized).toContain("errorSchema");
+    expect(serialized).toContain("authAlternatives");
+    expect(serialized).toContain("API_KEY_HEADER");
+    expect(serialized).toContain("BEARER");
+    expect(serialized).not.toMatch(
+      /secretValue|credentialValue|apiKeyValue|bearerToken/iu,
     );
   });
 

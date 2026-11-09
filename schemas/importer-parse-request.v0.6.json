@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/importer-parse-request.v0.6.json",
+  "title": "OpenAPI importer parse request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["source"],
+  "properties": {
+    "source": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "content"],
+          "properties": {
+            "kind": { "enum": ["paste", "upload"] },
+            "content": { "type": "string", "minLength": 1 },
+            "filename": { "type": "string", "minLength": 1, "maxLength": 255 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "url"],
+          "properties": {
+            "kind": { "const": "url" },
+            "url": { "type": "string", "format": "uri", "maxLength": 2048 }
+          }
+        }
+      ]
+    },
+    "limits": { "$ref": "#/$defs/limits" }
+  },
+  "$defs": {
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maxDocumentBytes",
+        "maxYamlAliases",
+        "maxRedirects",
+        "maxReferenceDepth",
+        "maxReferenceCount",
+        "maxOperationCount",
+        "timeoutMs"
+      ],
+      "properties": {
+        "maxDocumentBytes": { "type": "integer", "minimum": 1 },
+        "maxYamlAliases": { "type": "integer", "minimum": 0 },
+        "maxRedirects": { "type": "integer", "minimum": 0 },
+        "maxReferenceDepth": { "type": "integer", "minimum": 1 },
+        "maxReferenceCount": { "type": "integer", "minimum": 1 },
+        "maxOperationCount": { "type": "integer", "minimum": 1 },
+        "timeoutMs": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

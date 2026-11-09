@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/importer-parse-response.v0.6.json",
+  "title": "OpenAPI importer parse response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "document",
+    "candidates",
+    "warnings",
+    "source",
+    "snapshot",
+    "limits"
+  ],
+  "properties": {
+    "document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["openapi", "title", "version"],
+      "properties": {
+        "openapi": { "type": "string", "pattern": "^3\\.(0|1)\\." },
+        "title": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "candidateId",
+          "jsonPointer",
+          "method",
+          "path",
+          "tags",
+          "normalized",
+          "warnings"
+        ],
+        "properties": {
+          "candidateId": { "type": "string", "minLength": 1 },
+          "jsonPointer": { "type": "string", "pattern": "^#/paths/" },
+          "method": {
+            "enum": [
+              "GET",
+              "PUT",
+              "POST",
+              "DELETE",
+              "OPTIONS",
+              "HEAD",
+              "PATCH",
+              "TRACE"
+            ]
+          },
+          "path": { "type": "string", "pattern": "^/" },
+          "operationId": { "type": "string", "minLength": 1 },
+          "summary": { "type": "string", "minLength": 1 },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "normalized": { "$ref": "#/$defs/normalizedOperation" },
+          "warnings": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/warning" }
+          }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/warning" }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "sha256", "byteLength"],
+      "properties": {
+        "kind": { "enum": ["paste", "upload", "url"] },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "byteLength": { "type": "integer", "minimum": 0 },
+        "mediaType": { "type": "string", "minLength": 1 },
+        "finalUrl": { "type": "string", "format": "uri" },
+        "redirectCount": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["content"],
+      "properties": { "content": { "type": "string" } }
+    },
+    "limits": { "$ref": "importer-parse-request.v0.6.json#/$defs/limits" }
+  },
+  "$defs": {
+    "jsonSchema": {
+      "oneOf": [{ "type": "boolean" }, { "type": "object" }]
+    },
+    "warning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    },
+    "server": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url", "variables"],
+      "properties": {
+        "url": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "description": { "type": "string" },
+        "variables": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "authScheme": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemeName", "kind"],
+      "properties": {
+        "schemeName": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": ["API_KEY_HEADER", "API_KEY_QUERY", "BEARER", "UNSUPPORTED"]
+        },
+        "parameterName": { "type": "string", "minLength": 1 },
+        "sourceType": { "type": "string", "minLength": 1 }
+      }
+    },
+    "authAlternative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemes"],
+      "properties": {
+        "schemes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/authScheme" }
+        }
+      }
+    },
+    "normalizedOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputSchema",
+        "outputSchema",
+        "errorSchema",
+        "servers",
+        "authAlternatives",
+        "responseMetadata"
+      ],
+      "properties": {
+        "description": { "type": "string" },
+        "inputSchema": { "$ref": "#/$defs/jsonSchema" },
+        "outputSchema": { "$ref": "#/$defs/jsonSchema" },
+        "errorSchema": { "$ref": "#/$defs/jsonSchema" },
+        "servers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/server" }
+        },
+        "authAlternatives": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/authAlternative" }
+        },
+        "responseMetadata": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["errorStatusCodes"],
+          "properties": {
+            "successStatusCode": { "type": "string", "minLength": 1 },
+            "successMediaType": { "type": "string", "minLength": 1 },
+            "errorStatusCodes": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}
