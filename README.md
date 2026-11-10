@@ -10,6 +10,8 @@ This standalone npm repository owns its `package-lock.json` and versioned public
 
 Contract `0.7.0` adds write-only API-key/Bearer secret commands plus protected draft endpoint-configuration request/metadata schemas. Secret responses intentionally exclude the value and vault/storage reference; endpoint responses intentionally exclude the protected base URL.
 
+Contract `0.8.0` adds the Facet Manifest v1 schema and draft-validation request/response. Warning acknowledgements use a deterministic hash of warning code plus message, so acknowledgement scope is exact rather than code-wide.
+
 ## Local verification
 
 ```bash

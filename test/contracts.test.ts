@@ -12,10 +12,13 @@ import {
   IMPORTER_PARSE_REQUEST_SCHEMA_ID,
   IMPORTER_PARSE_RESPONSE_SCHEMA_ID,
   ENDPOINT_CONFIG_REQUEST_SCHEMA_ID,
+  FACET_MANIFEST_SCHEMA_ID,
   PROVIDER_MEMBERSHIP_SCHEMA_ID,
   PUBLIC_PROVIDER_SCHEMA_ID,
   ROTATE_SECRET_REQUEST_SCHEMA_ID,
   SECRET_REF_RESPONSE_SCHEMA_ID,
+  VALIDATE_FACET_VERSION_REQUEST_SCHEMA_ID,
+  VALIDATE_FACET_VERSION_RESPONSE_SCHEMA_ID,
 } from "../src/index.js";
 
 async function readSchema(name: string): Promise<Record<string, unknown>> {
@@ -53,8 +56,15 @@ describe("public contracts", () => {
     const endpointConfigSchema = await readSchema(
       "endpoint-config-request.v0.7.json",
     );
+    const manifestSchema = await readSchema("facet-manifest.v1.json");
+    const validateRequestSchema = await readSchema(
+      "validate-facet-version-request.v0.8.json",
+    );
+    const validateResponseSchema = await readSchema(
+      "validate-facet-version-response.v0.8.json",
+    );
 
-    expect(CONTRACT_VERSION).toBe("0.7.0");
+    expect(CONTRACT_VERSION).toBe("0.8.0");
     expect(errorSchema.$id).toBe(ERROR_SCHEMA_ID);
     expect(healthSchema.$id).toBe(HEALTH_SCHEMA_ID);
     expect(providerSchema.$id).toBe(PUBLIC_PROVIDER_SCHEMA_ID);
@@ -71,6 +81,32 @@ describe("public contracts", () => {
     expect(rotateSecretSchema.$id).toBe(ROTATE_SECRET_REQUEST_SCHEMA_ID);
     expect(secretResponseSchema.$id).toBe(SECRET_REF_RESPONSE_SCHEMA_ID);
     expect(endpointConfigSchema.$id).toBe(ENDPOINT_CONFIG_REQUEST_SCHEMA_ID);
+    expect(manifestSchema.$id).toBe(FACET_MANIFEST_SCHEMA_ID);
+    expect(validateRequestSchema.$id).toBe(
+      VALIDATE_FACET_VERSION_REQUEST_SCHEMA_ID,
+    );
+    expect(validateResponseSchema.$id).toBe(
+      VALIDATE_FACET_VERSION_RESPONSE_SCHEMA_ID,
+    );
+  });
+
+  it("defines stable warning acknowledgement and safe manifest validation contracts", async () => {
+    const request = await readSchema(
+      "validate-facet-version-request.v0.8.json",
+    );
+    const response = await readSchema(
+      "validate-facet-version-response.v0.8.json",
+    );
+    const manifest = await readSchema("facet-manifest.v1.json");
+    const serialized = JSON.stringify({ request, response, manifest });
+
+    expect(request.required).toEqual(["version", "warningAcknowledgements"]);
+    expect(serialized).toContain("warningId");
+    expect(serialized).toContain("acknowledged");
+    expect(serialized).toContain("facet.manifest/v1");
+    expect(serialized).not.toMatch(
+      /protectedBaseUrl|vaultReference|secretValue|credentialValue/iu,
+    );
   });
 
   it("defines write-only secret and protected endpoint configuration contracts", async () => {

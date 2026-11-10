@@ -48,6 +48,14 @@ export type {
 } from "./upstream-config.js";
 export { SECRET_KINDS } from "./upstream-config.js";
 export type {
+  ValidateFacetVersionRequest,
+  ValidateFacetVersionResponse,
+  ValidationIssue,
+  ValidationWarning,
+  WarningAcknowledgement,
+  WarningAcknowledgementInput,
+} from "./facet-validation.js";
+export type {
   ImporterOperationCandidate,
   ImporterParseRequest,
   ImporterParseResponse,
@@ -60,7 +68,7 @@ export type {
   OpenApiImportLimits,
 } from "./openapi-importer.js";
 
-export const CONTRACT_VERSION = "0.7.0" as const;
+export const CONTRACT_VERSION = "0.8.0" as const;
 export const ERROR_SCHEMA_ID =
   "https://facet.local/schemas/error-envelope.v0.1.json" as const;
 export const HEALTH_SCHEMA_ID =
@@ -87,3 +95,9 @@ export const ENDPOINT_CONFIG_REQUEST_SCHEMA_ID =
   "https://facet.local/schemas/endpoint-config-request.v0.7.json" as const;
 export const ENDPOINT_CONFIG_RESPONSE_SCHEMA_ID =
   "https://facet.local/schemas/endpoint-config-response.v0.7.json" as const;
+export const FACET_MANIFEST_SCHEMA_ID =
+  "https://facet.local/schemas/facet-manifest.v1.json" as const;
+export const VALIDATE_FACET_VERSION_REQUEST_SCHEMA_ID =
+  "https://facet.local/schemas/validate-facet-version-request.v0.8.json" as const;
+export const VALIDATE_FACET_VERSION_RESPONSE_SCHEMA_ID =
+  "https://facet.local/schemas/validate-facet-version-response.v0.8.json" as const;

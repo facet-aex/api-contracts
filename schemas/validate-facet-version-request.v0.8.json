@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/validate-facet-version-request.v0.8.json",
+  "title": "ValidateFacetVersionRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "warningAcknowledgements"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "warningAcknowledgements": {
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["warningId"],
+        "properties": {
+          "warningId": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+          "reason": { "type": "string", "minLength": 1, "maxLength": 500 }
+        }
+      }
+    }
+  }
+}
