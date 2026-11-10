@@ -14,6 +14,8 @@ import {
   ENDPOINT_CONFIG_REQUEST_SCHEMA_ID,
   FACET_MANIFEST_SCHEMA_ID,
   PROVIDER_MEMBERSHIP_SCHEMA_ID,
+  PUBLISH_FACET_VERSION_REQUEST_SCHEMA_ID,
+  PUBLISH_FACET_VERSION_RESPONSE_SCHEMA_ID,
   PUBLIC_PROVIDER_SCHEMA_ID,
   ROTATE_SECRET_REQUEST_SCHEMA_ID,
   SECRET_REF_RESPONSE_SCHEMA_ID,
@@ -63,8 +65,14 @@ describe("public contracts", () => {
     const validateResponseSchema = await readSchema(
       "validate-facet-version-response.v0.8.json",
     );
+    const publishRequestSchema = await readSchema(
+      "publish-facet-version-request.v0.9.json",
+    );
+    const publishResponseSchema = await readSchema(
+      "publish-facet-version-response.v0.9.json",
+    );
 
-    expect(CONTRACT_VERSION).toBe("0.8.0");
+    expect(CONTRACT_VERSION).toBe("0.9.0");
     expect(errorSchema.$id).toBe(ERROR_SCHEMA_ID);
     expect(healthSchema.$id).toBe(HEALTH_SCHEMA_ID);
     expect(providerSchema.$id).toBe(PUBLIC_PROVIDER_SCHEMA_ID);
@@ -87,6 +95,29 @@ describe("public contracts", () => {
     );
     expect(validateResponseSchema.$id).toBe(
       VALIDATE_FACET_VERSION_RESPONSE_SCHEMA_ID,
+    );
+    expect(publishRequestSchema.$id).toBe(
+      PUBLISH_FACET_VERSION_REQUEST_SCHEMA_ID,
+    );
+    expect(publishResponseSchema.$id).toBe(
+      PUBLISH_FACET_VERSION_RESPONSE_SCHEMA_ID,
+    );
+  });
+
+  it("defines optimistic immutable publication without private endpoint data", async () => {
+    const request = await readSchema("publish-facet-version-request.v0.9.json");
+    const response = await readSchema(
+      "publish-facet-version-response.v0.9.json",
+    );
+    const serialized = JSON.stringify(response);
+
+    expect(request.required).toEqual(["version", "visibility"]);
+    expect(JSON.stringify(request)).toContain("PUBLIC");
+    expect(serialized).toContain("PUBLISHED");
+    expect(serialized).toContain("currentPublishedVersionId");
+    expect(serialized).toContain("publishedAt");
+    expect(serialized).not.toMatch(
+      /protectedBaseUrl|vaultReference|secretRefId|secretValue|credentialValue/iu,
     );
   });
 

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/publish-facet-version-response.v0.9.json",
+  "title": "PublishFacetVersionResponse",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["facet", "facetVersion"],
+  "properties": {
+    "facet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "status",
+        "visibility",
+        "currentPublishedVersionId",
+        "version"
+      ],
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "status": { "const": "PUBLISHED" },
+        "visibility": { "enum": ["UNLISTED", "PUBLIC"] },
+        "currentPublishedVersionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "facetVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "facetId",
+        "displayVersion",
+        "status",
+        "visibility",
+        "contentHash",
+        "publishedAt",
+        "version"
+      ],
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "facetId": { "type": "string", "format": "uuid" },
+        "displayVersion": { "type": "string", "minLength": 1 },
+        "status": { "const": "PUBLISHED" },
+        "visibility": { "enum": ["UNLISTED", "PUBLIC"] },
+        "contentHash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "publishedAt": { "type": "string", "format": "date-time" },
+        "version": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

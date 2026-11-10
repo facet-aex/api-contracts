@@ -56,6 +56,11 @@ export type {
   WarningAcknowledgementInput,
 } from "./facet-validation.js";
 export type {
+  PublishedFacetVisibility,
+  PublishFacetVersionRequest,
+  PublishFacetVersionResponse,
+} from "./facet-publication.js";
+export type {
   ImporterOperationCandidate,
   ImporterParseRequest,
   ImporterParseResponse,
@@ -68,7 +73,7 @@ export type {
   OpenApiImportLimits,
 } from "./openapi-importer.js";
 
-export const CONTRACT_VERSION = "0.8.0" as const;
+export const CONTRACT_VERSION = "0.9.0" as const;
 export const ERROR_SCHEMA_ID =
   "https://facet.local/schemas/error-envelope.v0.1.json" as const;
 export const HEALTH_SCHEMA_ID =
@@ -101,3 +106,7 @@ export const VALIDATE_FACET_VERSION_REQUEST_SCHEMA_ID =
   "https://facet.local/schemas/validate-facet-version-request.v0.8.json" as const;
 export const VALIDATE_FACET_VERSION_RESPONSE_SCHEMA_ID =
   "https://facet.local/schemas/validate-facet-version-response.v0.8.json" as const;
+export const PUBLISH_FACET_VERSION_REQUEST_SCHEMA_ID =
+  "https://facet.local/schemas/publish-facet-version-request.v0.9.json" as const;
+export const PUBLISH_FACET_VERSION_RESPONSE_SCHEMA_ID =
+  "https://facet.local/schemas/publish-facet-version-response.v0.9.json" as const;
