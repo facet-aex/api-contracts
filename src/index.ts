@@ -61,6 +61,11 @@ export type {
   PublishFacetVersionResponse,
 } from "./facet-publication.js";
 export type {
+  PublicFacet,
+  ListPublicFacetsResponse,
+  GetPublicFacetResponse,
+} from "./public-catalog.js";
+export type {
   ImporterOperationCandidate,
   ImporterParseRequest,
   ImporterParseResponse,
@@ -73,7 +78,22 @@ export type {
   OpenApiImportLimits,
 } from "./openapi-importer.js";
 
-export const CONTRACT_VERSION = "0.9.0" as const;
+export type {
+  InvokeFacetRequest,
+  InvokeFacetResponse,
+  InvokeFacetPendingResponse,
+} from "./facet-invocation.js";
+export const CONTRACT_VERSION = "0.12.0" as const;
+export const INVOKE_FACET_REQUEST_SCHEMA_ID =
+  "https://facet.local/schemas/invoke-facet-request.v0.11.json" as const;
+export const INVOKE_FACET_RESPONSE_SCHEMA_ID =
+  "https://facet.local/schemas/invoke-facet-response.v0.12.json" as const;
+export const INVOKE_FACET_PENDING_SCHEMA_ID =
+  "https://facet.local/schemas/invoke-facet-pending.v0.12.json" as const;
+export const PUBLIC_CATALOG_LIST_SCHEMA_ID =
+  "https://facet.local/schemas/public-catalog-list.v0.10.json" as const;
+export const PUBLIC_CATALOG_DETAIL_SCHEMA_ID =
+  "https://facet.local/schemas/public-catalog-detail.v0.10.json" as const;
 export const ERROR_SCHEMA_ID =
   "https://facet.local/schemas/error-envelope.v0.1.json" as const;
 export const HEALTH_SCHEMA_ID =

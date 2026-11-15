@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/invoke-facet-pending.v0.12.json",
+  "title": "InvokeFacetPendingResponse",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["runId", "payment"],
+  "properties": {
+    "runId": { "type": "string", "format": "uuid" },
+    "payment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": { "status": { "const": "settlement_pending" } }
+    }
+  }
+}

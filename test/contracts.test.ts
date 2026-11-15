@@ -4,6 +4,11 @@ import { describe, expect, it } from "vitest";
 
 import {
   CONTRACT_VERSION,
+  INVOKE_FACET_REQUEST_SCHEMA_ID,
+  INVOKE_FACET_RESPONSE_SCHEMA_ID,
+  INVOKE_FACET_PENDING_SCHEMA_ID,
+  PUBLIC_CATALOG_LIST_SCHEMA_ID,
+  PUBLIC_CATALOG_DETAIL_SCHEMA_ID,
   CREATE_FACET_DRAFTS_REQUEST_SCHEMA_ID,
   CREATE_FACET_DRAFTS_RESPONSE_SCHEMA_ID,
   CREATE_SECRET_REQUEST_SCHEMA_ID,
@@ -72,7 +77,22 @@ describe("public contracts", () => {
       "publish-facet-version-response.v0.9.json",
     );
 
-    expect(CONTRACT_VERSION).toBe("0.9.0");
+    expect(CONTRACT_VERSION).toBe("0.12.0");
+    expect((await readSchema("invoke-facet-request.v0.11.json")).$id).toBe(
+      INVOKE_FACET_REQUEST_SCHEMA_ID,
+    );
+    expect((await readSchema("invoke-facet-response.v0.12.json")).$id).toBe(
+      INVOKE_FACET_RESPONSE_SCHEMA_ID,
+    );
+    expect((await readSchema("invoke-facet-pending.v0.12.json")).$id).toBe(
+      INVOKE_FACET_PENDING_SCHEMA_ID,
+    );
+    expect((await readSchema("public-catalog-list.v0.10.json")).$id).toBe(
+      PUBLIC_CATALOG_LIST_SCHEMA_ID,
+    );
+    expect((await readSchema("public-catalog-detail.v0.10.json")).$id).toBe(
+      PUBLIC_CATALOG_DETAIL_SCHEMA_ID,
+    );
     expect(errorSchema.$id).toBe(ERROR_SCHEMA_ID);
     expect(healthSchema.$id).toBe(HEALTH_SCHEMA_ID);
     expect(providerSchema.$id).toBe(PUBLIC_PROVIDER_SCHEMA_ID);

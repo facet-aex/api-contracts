@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/invoke-facet-request.v0.11.json",
+  "title": "InvokeFacetRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["input"],
+  "properties": { "input": { "type": "object" } }
+}
