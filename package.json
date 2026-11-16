@@ -1,7 +1,7 @@
 {
-  "name": "@facet/contracts",
-  "version": "0.12.0",
-  "description": "Versioned public interface contracts for FACET services and clients.",
+  "name": "@facet/api-contracts",
+  "version": "0.13.0",
+  "description": "Versioned public HTTP and JSON Schema interface contracts for FACET services and clients.",
   "type": "module",
   "private": false,
   "sideEffects": false,

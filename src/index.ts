@@ -77,13 +77,50 @@ export type {
   NormalizedServerTemplate,
   OpenApiImportLimits,
 } from "./openapi-importer.js";
-
+export type {
+  AutonomousAgentMetadata,
+  CreateActorRequest,
+  CreateActorResponse,
+  CreateAgentFacetRequest,
+  CreateAgentFacetResponse,
+  ExecutorRunRequest,
+  ExecutorRunResponse,
+  ExecutorRunUsage,
+  FacetPricing,
+  FacetType,
+  HostedActorMetadata,
+  PricingModel,
+} from "./actor-and-agent.js";
+export { FACET_TYPES, PRICING_MODELS } from "./actor-and-agent.js";
 export type {
   InvokeFacetRequest,
   InvokeFacetResponse,
   InvokeFacetPendingResponse,
+  RunReceiptMetadata,
 } from "./facet-invocation.js";
-export const CONTRACT_VERSION = "0.12.0" as const;
+
+export const CONTRACT_VERSION = "0.13.0" as const;
+export const CREATE_ACTOR_REQUEST_SCHEMA_ID =
+  "https://facet.local/schemas/create-actor-request.v0.13.json" as const;
+export const CREATE_ACTOR_RESPONSE_SCHEMA_ID =
+  "https://facet.local/schemas/create-actor-response.v0.13.json" as const;
+export const CREATE_AGENT_FACET_REQUEST_SCHEMA_ID =
+  "https://facet.local/schemas/create-agent-facet-request.v0.13.json" as const;
+export const CREATE_AGENT_FACET_RESPONSE_SCHEMA_ID =
+  "https://facet.local/schemas/create-agent-facet-response.v0.13.json" as const;
+export const EXECUTOR_RUN_REQUEST_SCHEMA_ID =
+  "https://facet.local/schemas/executor-run-request.v0.13.json" as const;
+export const EXECUTOR_RUN_RESPONSE_SCHEMA_ID =
+  "https://facet.local/schemas/executor-run-response.v0.13.json" as const;
+export const PUBLIC_FACET_V013_SCHEMA_ID =
+  "https://facet.local/schemas/public-facet.v0.13.json" as const;
+export const PUBLIC_CATALOG_LIST_V013_SCHEMA_ID =
+  "https://facet.local/schemas/public-catalog-list.v0.13.json" as const;
+export const PUBLIC_CATALOG_DETAIL_V013_SCHEMA_ID =
+  "https://facet.local/schemas/public-catalog-detail.v0.13.json" as const;
+export const INVOKE_FACET_RESPONSE_V013_SCHEMA_ID =
+  "https://facet.local/schemas/invoke-facet-response.v0.13.json" as const;
+
 export const INVOKE_FACET_REQUEST_SCHEMA_ID =
   "https://facet.local/schemas/invoke-facet-request.v0.11.json" as const;
 export const INVOKE_FACET_RESPONSE_SCHEMA_ID =

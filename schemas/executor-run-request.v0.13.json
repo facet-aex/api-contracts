@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/executor-run-request.v0.13.json",
+  "title": "ExecutorRunRequestV013",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "runId",
+    "facetId",
+    "facetVersionId",
+    "facetType",
+    "input",
+    "timeoutMs"
+  ],
+  "properties": {
+    "runId": { "type": "string", "format": "uuid" },
+    "facetId": { "type": "string", "format": "uuid" },
+    "facetVersionId": { "type": "string", "format": "uuid" },
+    "facetType": { "enum": ["HOSTED_ACTOR", "AUTONOMOUS_AGENT"] },
+    "input": { "type": "object" },
+    "timeoutMs": { "type": "integer", "minimum": 100, "maximum": 60000 },
+    "actorBundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "imageDigest"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "imageDigest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "agentConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "erc8004ChainId",
+        "erc8004Registry",
+        "erc8004TokenId",
+        "taskKind"
+      ],
+      "properties": {
+        "erc8004ChainId": { "const": 43113 },
+        "erc8004Registry": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+        },
+        "erc8004TokenId": { "type": "string", "pattern": "^[0-9]+$" },
+        "taskKind": { "type": "string", "minLength": 1 },
+        "code": { "type": "string" }
+      }
+    }
+  }
+}

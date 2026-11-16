@@ -4,11 +4,22 @@ import { describe, expect, it } from "vitest";
 
 import {
   CONTRACT_VERSION,
+  CREATE_ACTOR_REQUEST_SCHEMA_ID,
+  CREATE_ACTOR_RESPONSE_SCHEMA_ID,
+  CREATE_AGENT_FACET_REQUEST_SCHEMA_ID,
+  CREATE_AGENT_FACET_RESPONSE_SCHEMA_ID,
+  EXECUTOR_RUN_REQUEST_SCHEMA_ID,
+  EXECUTOR_RUN_RESPONSE_SCHEMA_ID,
+  FACET_TYPES,
   INVOKE_FACET_REQUEST_SCHEMA_ID,
   INVOKE_FACET_RESPONSE_SCHEMA_ID,
+  INVOKE_FACET_RESPONSE_V013_SCHEMA_ID,
   INVOKE_FACET_PENDING_SCHEMA_ID,
   PUBLIC_CATALOG_LIST_SCHEMA_ID,
   PUBLIC_CATALOG_DETAIL_SCHEMA_ID,
+  PUBLIC_CATALOG_LIST_V013_SCHEMA_ID,
+  PUBLIC_CATALOG_DETAIL_V013_SCHEMA_ID,
+  PUBLIC_FACET_V013_SCHEMA_ID,
   CREATE_FACET_DRAFTS_REQUEST_SCHEMA_ID,
   CREATE_FACET_DRAFTS_RESPONSE_SCHEMA_ID,
   CREATE_SECRET_REQUEST_SCHEMA_ID,
@@ -34,7 +45,7 @@ async function readSchema(name: string): Promise<Record<string, unknown>> {
 }
 
 describe("public contracts", () => {
-  it("keeps the package and schema identifiers explicitly versioned", async () => {
+  it("keeps the package and schema identifiers explicitly versioned at 0.13.0", async () => {
     const errorSchema = await readSchema("error-envelope.v0.1.json");
     const healthSchema = await readSchema("health-status.v0.1.json");
     const providerSchema = await readSchema("public-provider.v0.2.json");
@@ -77,7 +88,42 @@ describe("public contracts", () => {
       "publish-facet-version-response.v0.9.json",
     );
 
-    expect(CONTRACT_VERSION).toBe("0.12.0");
+    expect(CONTRACT_VERSION).toBe("0.13.0");
+    expect(FACET_TYPES).toEqual([
+      "EXTERNAL_HTTP_API",
+      "HOSTED_ACTOR",
+      "AUTONOMOUS_AGENT",
+    ]);
+    expect((await readSchema("create-actor-request.v0.13.json")).$id).toBe(
+      CREATE_ACTOR_REQUEST_SCHEMA_ID,
+    );
+    expect((await readSchema("create-actor-response.v0.13.json")).$id).toBe(
+      CREATE_ACTOR_RESPONSE_SCHEMA_ID,
+    );
+    expect(
+      (await readSchema("create-agent-facet-request.v0.13.json")).$id,
+    ).toBe(CREATE_AGENT_FACET_REQUEST_SCHEMA_ID);
+    expect(
+      (await readSchema("create-agent-facet-response.v0.13.json")).$id,
+    ).toBe(CREATE_AGENT_FACET_RESPONSE_SCHEMA_ID);
+    expect((await readSchema("executor-run-request.v0.13.json")).$id).toBe(
+      EXECUTOR_RUN_REQUEST_SCHEMA_ID,
+    );
+    expect((await readSchema("executor-run-response.v0.13.json")).$id).toBe(
+      EXECUTOR_RUN_RESPONSE_SCHEMA_ID,
+    );
+    expect((await readSchema("public-facet.v0.13.json")).$id).toBe(
+      PUBLIC_FACET_V013_SCHEMA_ID,
+    );
+    expect((await readSchema("public-catalog-list.v0.13.json")).$id).toBe(
+      PUBLIC_CATALOG_LIST_V013_SCHEMA_ID,
+    );
+    expect((await readSchema("public-catalog-detail.v0.13.json")).$id).toBe(
+      PUBLIC_CATALOG_DETAIL_V013_SCHEMA_ID,
+    );
+    expect((await readSchema("invoke-facet-response.v0.13.json")).$id).toBe(
+      INVOKE_FACET_RESPONSE_V013_SCHEMA_ID,
+    );
     expect((await readSchema("invoke-facet-request.v0.11.json")).$id).toBe(
       INVOKE_FACET_REQUEST_SCHEMA_ID,
     );
@@ -122,6 +168,47 @@ describe("public contracts", () => {
     expect(publishResponseSchema.$id).toBe(
       PUBLISH_FACET_VERSION_RESPONSE_SCHEMA_ID,
     );
+  });
+
+  it("supports multi-modal ActorBazaar and ERC-8004 A2A contracts in v0.13.0", async () => {
+    const manifest = await readSchema("facet-manifest.v1.json");
+    const createActorReq = await readSchema("create-actor-request.v0.13.json");
+    const createAgentReq = await readSchema(
+      "create-agent-facet-request.v0.13.json",
+    );
+    const executorResp = await readSchema("executor-run-response.v0.13.json");
+    const invokeResp = await readSchema("invoke-facet-response.v0.13.json");
+
+    expect(JSON.stringify(manifest)).toContain("HOSTED_ACTOR");
+    expect(JSON.stringify(manifest)).toContain("AUTONOMOUS_AGENT");
+    expect(createActorReq.required).toEqual([
+      "providerId",
+      "name",
+      "slug",
+      "description",
+      "category",
+      "inputSchema",
+      "code",
+    ]);
+    expect(createAgentReq.required).toEqual([
+      "providerId",
+      "name",
+      "slug",
+      "description",
+      "category",
+      "erc8004TokenId",
+      "taskKind",
+      "inputSchema",
+    ]);
+    expect(executorResp.required).toEqual([
+      "status",
+      "result",
+      "dataset",
+      "logs",
+      "usage",
+    ]);
+    expect(JSON.stringify(invokeResp)).toContain("receiptTxHash");
+    expect(JSON.stringify(invokeResp)).toContain("runnerSignature");
   });
 
   it("defines optimistic immutable publication without private endpoint data", async () => {

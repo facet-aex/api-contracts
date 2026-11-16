@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/create-actor-request.v0.13.json",
+  "title": "CreateActorRequestV013",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "providerId",
+    "name",
+    "slug",
+    "description",
+    "category",
+    "inputSchema",
+    "code"
+  ],
+  "properties": {
+    "providerId": { "type": "string", "format": "uuid" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "summary": { "type": "string", "maxLength": 280 },
+    "description": { "type": "string", "minLength": 1, "maxLength": 10000 },
+    "category": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "tags": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "type": "string", "minLength": 1, "maxLength": 40 }
+    },
+    "inputSchema": { "type": "object" },
+    "outputSchema": { "type": "object" },
+    "code": { "type": "string", "minLength": 10, "maxLength": 131072 },
+    "pricingModel": { "enum": ["PAY_PER_RUN", "PAY_PER_RESULT"] },
+    "priceAtomic": { "type": "string", "pattern": "^[0-9]+$" },
+    "payTo": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" },
+    "registryTxHash": { "type": "string", "pattern": "^0x[a-fA-F0-9]{64}$" }
+  }
+}
