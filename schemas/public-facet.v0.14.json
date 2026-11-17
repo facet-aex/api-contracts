@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/public-facet.v0.14.json",
+  "title": "PublicFacetV014",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "versionId",
+    "slug",
+    "name",
+    "description",
+    "category",
+    "tags",
+    "facetType",
+    "provider",
+    "displayVersion",
+    "method",
+    "inputSchema",
+    "outputSchema",
+    "pricing",
+    "publishedAt"
+  ],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "versionId": { "type": "string", "format": "uuid" },
+    "slug": { "type": "string" },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "category": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "facetType": {
+      "enum": ["EXTERNAL_HTTP_API", "HOSTED_ACTOR", "AUTONOMOUS_AGENT"]
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "slug"],
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "name": { "type": "string" },
+        "slug": { "type": "string" }
+      }
+    },
+    "displayVersion": { "type": "string" },
+    "method": { "type": "string" },
+    "inputSchema": {},
+    "outputSchema": {},
+    "pricing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model", "priceAtomic", "assetAddress", "chainId", "payTo"],
+      "properties": {
+        "model": { "enum": ["PAY_PER_RUN", "PAY_PER_RESULT"] },
+        "priceAtomic": { "type": "string", "pattern": "^[0-9]+$" },
+        "assetAddress": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+        },
+        "chainId": { "const": 43113 },
+        "payTo": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" }
+      }
+    },
+    "actorMeta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime", "imageDigest"],
+      "properties": {
+        "runtime": { "type": "string" },
+        "imageDigest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "runnerOciDigest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "registryTxHash": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]{64}$"
+        },
+        "registryVerified": { "type": "boolean" }
+      }
+    },
+    "agentMeta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "erc8004ChainId",
+        "erc8004Registry",
+        "erc8004TokenId",
+        "taskKind"
+      ],
+      "properties": {
+        "erc8004ChainId": { "const": 43113 },
+        "erc8004Registry": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+        },
+        "erc8004TokenId": { "type": "string", "pattern": "^[0-9]+$" },
+        "taskKind": { "type": "string" },
+        "registryTxHash": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]{64}$"
+        },
+        "registryVerified": { "type": "boolean" }
+      }
+    },
+    "publishedAt": { "type": "string", "format": "date-time" }
+  }
+}

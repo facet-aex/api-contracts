@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/wallet-link-challenge-response.v0.14.json",
+  "title": "WalletLinkChallengeResponseV014",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["challengeId", "message", "expiresAt"],
+  "properties": {
+    "challengeId": { "type": "string", "format": "uuid" },
+    "message": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "expiresAt": { "type": "string", "format": "date-time" }
+  }
+}

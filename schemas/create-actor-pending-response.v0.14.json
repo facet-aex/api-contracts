@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/create-actor-pending-response.v0.14.json",
+  "title": "CreateActorPendingResponseV014",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["facet"],
+  "properties": {
+    "facet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "versionId", "status", "visibility", "imageDigest"],
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "versionId": { "type": "string", "format": "uuid" },
+        "slug": { "type": "string" },
+        "facetType": { "const": "HOSTED_ACTOR" },
+        "status": { "const": "REGISTRATION_PENDING" },
+        "visibility": { "const": "PRIVATE" },
+        "imageDigest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

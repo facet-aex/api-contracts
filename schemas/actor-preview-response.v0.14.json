@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/actor-preview-response.v0.14.json",
+  "title": "ActorPreviewResponseV014",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["result", "dataset", "logs", "usage"],
+  "properties": {
+    "result": {},
+    "dataset": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "logs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["itemCount", "durationMs"],
+      "properties": {
+        "itemCount": { "type": "integer", "minimum": 0 },
+        "durationMs": { "type": "integer", "minimum": 0 },
+        "outputHash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "runnerSignature": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]+$"
+        }
+      }
+    }
+  }
+}

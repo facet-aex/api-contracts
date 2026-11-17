@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/invoke-facet-pending.v0.14.json",
+  "title": "InvokeFacetPendingResponseV014",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["runId", "payment"],
+  "properties": {
+    "runId": { "type": "string", "format": "uuid" },
+    "payment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "enum": [
+            "settlement_pending",
+            "receipt_pending",
+            "escrow_pending",
+            "refund_pending"
+          ]
+        },
+        "transaction": { "type": "string", "pattern": "^0x[a-fA-F0-9]{64}$" }
+      }
+    }
+  }
+}

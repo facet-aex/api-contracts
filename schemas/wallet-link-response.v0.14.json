@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/wallet-link-response.v0.14.json",
+  "title": "WalletLinkResponseV014",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["walletAddress", "verifiedAt"],
+  "properties": {
+    "walletAddress": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" },
+    "verifiedAt": { "type": "string", "format": "date-time" }
+  }
+}

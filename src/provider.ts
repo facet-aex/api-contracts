@@ -49,3 +49,22 @@ export interface ProviderMembership {
 export interface UpdateProviderMembershipRequest {
   role: ProviderRole;
 }
+
+export type WalletLinkChallengeRequest = Record<string, never>;
+
+export interface WalletLinkChallengeResponse {
+  challengeId: string;
+  message: string;
+  expiresAt: string;
+}
+
+export interface WalletLinkRequest {
+  challengeId: string;
+  address: string;
+  signature: string;
+}
+
+export interface WalletLinkResponse {
+  walletAddress: string;
+  verifiedAt: string;
+}

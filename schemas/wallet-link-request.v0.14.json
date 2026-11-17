@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/wallet-link-request.v0.14.json",
+  "title": "WalletLinkRequestV014",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["challengeId", "address", "signature"],
+  "properties": {
+    "challengeId": { "type": "string", "format": "uuid" },
+    "address": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" },
+    "signature": { "type": "string", "pattern": "^0x[a-fA-F0-9]+$" }
+  }
+}

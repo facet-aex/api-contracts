@@ -25,6 +25,10 @@ export type {
   PublicProvider,
   UpdateProviderMembershipRequest,
   UpdateProviderRequest,
+  WalletLinkChallengeRequest,
+  WalletLinkChallengeResponse,
+  WalletLinkRequest,
+  WalletLinkResponse,
 } from "./provider.js";
 export type {
   CreateFacetDraftSelection,
@@ -78,8 +82,15 @@ export type {
   OpenApiImportLimits,
 } from "./openapi-importer.js";
 export type {
+  ActorPreviewRequest,
+  ActorPreviewResponse,
+  ActorPreviewUsage,
+  ActorPublishStatus,
+  ActorPublishStatusResponse,
   AutonomousAgentMetadata,
+  CreateActorPendingResponse,
   CreateActorRequest,
+  CreateActorRequestV014,
   CreateActorResponse,
   CreateAgentFacetRequest,
   CreateAgentFacetResponse,
@@ -93,13 +104,46 @@ export type {
 } from "./actor-and-agent.js";
 export { FACET_TYPES, PRICING_MODELS } from "./actor-and-agent.js";
 export type {
+  InvokeFacetPaymentV014,
+  InvokeFacetPendingResponse,
+  InvokeFacetPendingResponseV014,
+  InvokeFacetPendingStatus,
   InvokeFacetRequest,
   InvokeFacetResponse,
-  InvokeFacetPendingResponse,
+  InvokeFacetResponseV014,
   RunReceiptMetadata,
+  RunReceiptMetadataV014,
 } from "./facet-invocation.js";
 
-export const CONTRACT_VERSION = "0.13.0" as const;
+export const CONTRACT_VERSION = "0.14.0" as const;
+export const WALLET_LINK_CHALLENGE_REQUEST_V014_SCHEMA_ID =
+  "https://facet.local/schemas/wallet-link-challenge-request.v0.14.json" as const;
+export const WALLET_LINK_CHALLENGE_RESPONSE_V014_SCHEMA_ID =
+  "https://facet.local/schemas/wallet-link-challenge-response.v0.14.json" as const;
+export const WALLET_LINK_REQUEST_V014_SCHEMA_ID =
+  "https://facet.local/schemas/wallet-link-request.v0.14.json" as const;
+export const WALLET_LINK_RESPONSE_V014_SCHEMA_ID =
+  "https://facet.local/schemas/wallet-link-response.v0.14.json" as const;
+export const ACTOR_PREVIEW_REQUEST_V014_SCHEMA_ID =
+  "https://facet.local/schemas/actor-preview-request.v0.14.json" as const;
+export const ACTOR_PREVIEW_RESPONSE_V014_SCHEMA_ID =
+  "https://facet.local/schemas/actor-preview-response.v0.14.json" as const;
+export const CREATE_ACTOR_REQUEST_V014_SCHEMA_ID =
+  "https://facet.local/schemas/create-actor-request.v0.14.json" as const;
+export const CREATE_ACTOR_PENDING_RESPONSE_V014_SCHEMA_ID =
+  "https://facet.local/schemas/create-actor-pending-response.v0.14.json" as const;
+export const ACTOR_PUBLISH_STATUS_RESPONSE_V014_SCHEMA_ID =
+  "https://facet.local/schemas/actor-publish-status-response.v0.14.json" as const;
+export const PUBLIC_FACET_V014_SCHEMA_ID =
+  "https://facet.local/schemas/public-facet.v0.14.json" as const;
+export const PUBLIC_CATALOG_LIST_V014_SCHEMA_ID =
+  "https://facet.local/schemas/public-catalog-list.v0.14.json" as const;
+export const PUBLIC_CATALOG_DETAIL_V014_SCHEMA_ID =
+  "https://facet.local/schemas/public-catalog-detail.v0.14.json" as const;
+export const INVOKE_FACET_RESPONSE_V014_SCHEMA_ID =
+  "https://facet.local/schemas/invoke-facet-response.v0.14.json" as const;
+export const INVOKE_FACET_PENDING_V014_SCHEMA_ID =
+  "https://facet.local/schemas/invoke-facet-pending.v0.14.json" as const;
 export const CREATE_ACTOR_REQUEST_SCHEMA_ID =
   "https://facet.local/schemas/create-actor-request.v0.13.json" as const;
 export const CREATE_ACTOR_RESPONSE_SCHEMA_ID =

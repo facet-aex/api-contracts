@@ -19,7 +19,9 @@ export interface FacetPricing {
 export interface HostedActorMetadata {
   runtime: string;
   imageDigest: string;
+  runnerOciDigest?: string;
   registryTxHash?: string;
+  registryVerified?: boolean;
 }
 
 export interface AutonomousAgentMetadata {
@@ -28,6 +30,7 @@ export interface AutonomousAgentMetadata {
   erc8004TokenId: string;
   taskKind: string;
   registryTxHash?: string;
+  registryVerified?: boolean;
 }
 
 export interface CreateActorRequest {
@@ -127,4 +130,65 @@ export interface ExecutorRunResponse {
   dataset: Record<string, unknown>[];
   logs: string[];
   usage: ExecutorRunUsage;
+}
+
+export interface ActorPreviewRequest {
+  providerId: string;
+  code: string;
+  inputSchema: Record<string, unknown>;
+  input: Record<string, unknown>;
+}
+
+export interface ActorPreviewUsage {
+  itemCount: number;
+  durationMs: number;
+  outputHash?: string;
+  runnerSignature?: string;
+}
+
+export interface ActorPreviewResponse {
+  result: unknown;
+  dataset: Record<string, unknown>[];
+  logs: string[];
+  usage: ActorPreviewUsage;
+}
+
+export interface CreateActorRequestV014 {
+  id?: string;
+  providerId: string;
+  name: string;
+  slug: string;
+  summary?: string;
+  description: string;
+  category: string;
+  tags?: string[];
+  inputSchema: Record<string, unknown>;
+  outputSchema?: Record<string, unknown>;
+  code: string;
+  pricingModel?: "PAY_PER_RUN";
+  priceAtomic?: string;
+  payTo?: string;
+}
+
+export interface CreateActorPendingResponse {
+  facet: {
+    id: string;
+    versionId: string;
+    slug?: string;
+    facetType?: "HOSTED_ACTOR";
+    status: "REGISTRATION_PENDING";
+    visibility: "PRIVATE";
+    imageDigest: string;
+  };
+}
+
+export type ActorPublishStatus =
+  "REGISTRATION_PENDING" | "PUBLISHED" | "REGISTRATION_FAILED";
+
+export interface ActorPublishStatusResponse {
+  facetId: string;
+  versionId: string;
+  status: ActorPublishStatus;
+  registryTxHash?: string;
+  errorCode?: string;
 }
