@@ -48,7 +48,7 @@ export interface CreateActorRequest {
 
 export interface CreateActorPendingResponse {
   facet: {
-    creator: string;
+    provider: string;
     facetName: string;
     facetDisplayName: string;
     version: string;
@@ -61,7 +61,7 @@ export interface CreateActorPendingResponse {
 
 export interface CreateActorResponse {
   facet: {
-    creator: string;
+    provider: string;
     facetName: string;
     facetDisplayName: string;
     version: string;
@@ -77,7 +77,7 @@ export type ActorPublishStatus =
   "REGISTRATION_PENDING" | "PUBLISHED" | "REGISTRATION_FAILED";
 
 export interface ActorPublishStatusResponse {
-  creator: string;
+  provider: string;
   facetName: string;
   version: string;
   status: ActorPublishStatus;
@@ -107,7 +107,7 @@ export interface CreateAgentFacetRequest {
 
 export interface CreateAgentFacetResponse {
   facet: {
-    creator: string;
+    provider: string;
     facetName: string;
     facetDisplayName: string;
     version: string;

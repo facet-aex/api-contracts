@@ -14,10 +14,8 @@ import {
   CREATE_AGENT_FACET_RESPONSE_V015_SCHEMA_ID,
   CREATE_FACET_DRAFTS_REQUEST_V015_SCHEMA_ID,
   CREATE_FACET_DRAFTS_RESPONSE_V015_SCHEMA_ID,
-  CREATE_PROVIDER_REQUEST_V015_SCHEMA_ID,
   CREATE_SECRET_REQUEST_SCHEMA_ID,
-  CREATOR_USERNAME_PATTERN,
-  ENDPOINT_CONFIG_REQUEST_SCHEMA_ID,
+  ENDPOINT_CONFIG_REQUEST_V015_SCHEMA_ID,
   ENDPOINT_CONFIG_RESPONSE_V015_SCHEMA_ID,
   ERROR_SCHEMA_ID,
   EXECUTOR_RUN_REQUEST_V015_SCHEMA_ID,
@@ -31,7 +29,6 @@ import {
   INVOKE_FACET_PENDING_V015_SCHEMA_ID,
   INVOKE_FACET_REQUEST_SCHEMA_ID,
   INVOKE_FACET_RESPONSE_V015_SCHEMA_ID,
-  PROVIDER_MEMBERSHIP_V015_SCHEMA_ID,
   PUBLIC_CATALOG_DETAIL_V015_SCHEMA_ID,
   PUBLIC_CATALOG_LIST_V015_SCHEMA_ID,
   PUBLIC_FACET_V015_SCHEMA_ID,
@@ -41,7 +38,7 @@ import {
   ROTATE_SECRET_REQUEST_SCHEMA_ID,
   SECRET_REF_RESPONSE_SCHEMA_ID,
   SEMVER_PATTERN,
-  UPDATE_PROVIDER_REQUEST_V015_SCHEMA_ID,
+  USERNAME_PATTERN,
   VALIDATE_FACET_VERSION_REQUEST_V015_SCHEMA_ID,
   VALIDATE_FACET_VERSION_RESPONSE_V015_SCHEMA_ID,
   WALLET_LINK_CHALLENGE_REQUEST_SCHEMA_ID,
@@ -50,9 +47,9 @@ import {
   WALLET_LINK_RESPONSE_SCHEMA_ID,
   bumpPatchSemver,
   compareSemver,
-  isValidCreatorUsername,
   isValidFacetName,
   isValidSemver,
+  isValidUsername,
   suggestFacetName,
   type ActorPreviewRequest,
   type ActorPreviewResponse,
@@ -62,6 +59,7 @@ import {
   type CreateActorResponse,
   type CreateAgentFacetRequest,
   type CreateAgentFacetResponse,
+  type EndpointConfigRequest,
   type ExecutorRunRequest,
   type GetPublicFacetResponse,
   type InvokeFacetPendingResponse,
@@ -91,24 +89,24 @@ describe("v0.15.0 canonical Option B contracts", () => {
   it("pins CONTRACT_VERSION at 0.15.0 and uppercase FACET_TYPES API | ACTOR | AGENT", () => {
     expect(CONTRACT_VERSION).toBe("0.15.0");
     expect(FACET_TYPES).toEqual(["API", "ACTOR", "AGENT"]);
-    expect(CREATOR_USERNAME_PATTERN).toBe("^[a-z0-9]+(?:-[a-z0-9]+)*$");
+    expect(USERNAME_PATTERN).toBe("^[a-z0-9]+(?:-[a-z0-9]+)*$");
     expect(FACET_NAME_PATTERN).toBe("^[a-z0-9]+(?:-[a-z0-9]+)*$");
     expect(SEMVER_PATTERN).toBe(
       "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$",
     );
   });
 
-  it("enforces hyphenated kebab-case lengths for creator (8-16), facetName (4-32), and strict SemVer", () => {
-    // creator username: 8-16 lowercase hyphenated kebab-case
-    expect(isValidCreatorUsername("tai-hung")).toBe(true); // 8 chars
-    expect(isValidCreatorUsername("facet-demo-user1")).toBe(true); // 16 chars
-    expect(isValidCreatorUsername("tai-hu1")).toBe(false); // 7 chars
-    expect(isValidCreatorUsername("this-username-is17")).toBe(false); // 18 chars
-    expect(isValidCreatorUsername("tai_hung")).toBe(false); // underscore forbidden
-    expect(isValidCreatorUsername("Tai-Hung")).toBe(false); // uppercase forbidden
-    expect(isValidCreatorUsername("tai--hung")).toBe(false); // double hyphen forbidden
-    expect(isValidCreatorUsername("-tai-hung")).toBe(false);
-    expect(isValidCreatorUsername("tai-hung-")).toBe(false);
+  it("enforces hyphenated kebab-case lengths for username/provider (8-16), facetName (4-32), and strict SemVer", () => {
+    // user username (also used as Facet provider handle): 8-16 lowercase hyphenated kebab-case
+    expect(isValidUsername("tai-hung")).toBe(true); // 8 chars
+    expect(isValidUsername("facet-demo-user1")).toBe(true); // 16 chars
+    expect(isValidUsername("tai-hu1")).toBe(false); // 7 chars
+    expect(isValidUsername("this-username-is17")).toBe(false); // 18 chars
+    expect(isValidUsername("tai_hung")).toBe(false); // underscore forbidden
+    expect(isValidUsername("Tai-Hung")).toBe(false); // uppercase forbidden
+    expect(isValidUsername("tai--hung")).toBe(false); // double hyphen forbidden
+    expect(isValidUsername("-tai-hung")).toBe(false);
+    expect(isValidUsername("tai-hung-")).toBe(false);
 
     // facetName: 4-32 lowercase hyphenated kebab-case
     expect(isValidFacetName("gold")).toBe(true); // 4 chars
@@ -155,7 +153,6 @@ describe("v0.15.0 canonical Option B contracts", () => {
       ["create-secret-request.v0.7.json", CREATE_SECRET_REQUEST_SCHEMA_ID],
       ["rotate-secret-request.v0.7.json", ROTATE_SECRET_REQUEST_SCHEMA_ID],
       ["secret-ref-response.v0.7.json", SECRET_REF_RESPONSE_SCHEMA_ID],
-      ["endpoint-config-request.v0.7.json", ENDPOINT_CONFIG_REQUEST_SCHEMA_ID],
       ["invoke-facet-request.v0.11.json", INVOKE_FACET_REQUEST_SCHEMA_ID],
       [
         "wallet-link-challenge-request.v0.14.json",
@@ -170,21 +167,16 @@ describe("v0.15.0 canonical Option B contracts", () => {
       ["facet-manifest.v1.json", FACET_MANIFEST_SCHEMA_ID],
       ["public-provider.v0.15.json", PUBLIC_PROVIDER_V015_SCHEMA_ID],
       [
-        "create-provider-request.v0.15.json",
-        CREATE_PROVIDER_REQUEST_V015_SCHEMA_ID,
-      ],
-      [
-        "update-provider-request.v0.15.json",
-        UPDATE_PROVIDER_REQUEST_V015_SCHEMA_ID,
-      ],
-      ["provider-membership.v0.15.json", PROVIDER_MEMBERSHIP_V015_SCHEMA_ID],
-      [
         "create-facet-drafts-request.v0.15.json",
         CREATE_FACET_DRAFTS_REQUEST_V015_SCHEMA_ID,
       ],
       [
         "create-facet-drafts-response.v0.15.json",
         CREATE_FACET_DRAFTS_RESPONSE_V015_SCHEMA_ID,
+      ],
+      [
+        "endpoint-config-request.v0.15.json",
+        ENDPOINT_CONFIG_REQUEST_V015_SCHEMA_ID,
       ],
       [
         "endpoint-config-response.v0.15.json",
@@ -258,7 +250,7 @@ describe("v0.15.0 canonical Option B contracts", () => {
       expect(schema.$id).toBe(expectedId);
       const text = JSON.stringify(schema);
       expect(text).not.toMatch(
-        /EXTERNAL_HTTP_API|HOSTED_ACTOR|AUTONOMOUS_AGENT|facetSlug|facetFullName|displayVersion|\bfullName\b/u,
+        /EXTERNAL_HTTP_API|HOSTED_ACTOR|AUTONOMOUS_AGENT|facetSlug|facetFullName|displayVersion|\bfullName\b|\bcreator\b|creatorPayTo/u,
       );
       if (
         filename !== "facet-manifest.v1.json" &&
@@ -398,7 +390,7 @@ describe("v0.15.0 canonical Option B contracts", () => {
 
     const pendingRes: CreateActorPendingResponse = {
       facet: {
-        creator: "tai-hung-dev",
+        provider: "tai-hung-dev",
         facetName: "echo-transform",
         facetDisplayName: "Echo Transform Actor",
         version: "1.0.0",
@@ -410,7 +402,7 @@ describe("v0.15.0 canonical Option B contracts", () => {
     };
     const publishedRes: CreateActorResponse = {
       facet: {
-        creator: "tai-hung-dev",
+        provider: "tai-hung-dev",
         facetName: "echo-transform",
         facetDisplayName: "Echo Transform Actor",
         version: "1.0.0",
@@ -422,7 +414,7 @@ describe("v0.15.0 canonical Option B contracts", () => {
       },
     };
     const statusRes: ActorPublishStatusResponse = {
-      creator: "tai-hung-dev",
+      provider: "tai-hung-dev",
       facetName: "echo-transform",
       version: "1.0.0",
       status: "PUBLISHED",
@@ -448,7 +440,7 @@ describe("v0.15.0 canonical Option B contracts", () => {
     };
     const createAgentRes: CreateAgentFacetResponse = {
       facet: {
-        creator: "facet-demo-org",
+        provider: "facet-demo-org",
         facetName: "vn-market-agent",
         facetDisplayName: "VN Market Analyst Agent",
         version: "1.0.0",
@@ -503,7 +495,7 @@ describe("v0.15.0 canonical Option B contracts", () => {
     ]);
 
     const actorSample: PublicFacet = {
-      creator: "facet-demo-org",
+      provider: "facet-demo-org",
       facetName: "vn-gold-fx-actor",
       facetDisplayName: "VN Gold & FX Normalizer",
       version: "1.0.0",
@@ -551,7 +543,7 @@ describe("v0.15.0 canonical Option B contracts", () => {
     };
 
     const apiSample: PublicFacet = {
-      creator: "facet-demo-org",
+      provider: "facet-demo-org",
       facetName: "coingecko-btc",
       facetDisplayName: "CoinGecko BTC Historical Price",
       version: "1.0.0",
@@ -577,23 +569,31 @@ describe("v0.15.0 canonical Option B contracts", () => {
     );
 
     const providerSample: PublicProvider = {
-      creator: "tai-hung-dev",
-      displayName: "tai-hung-dev",
-      description: "Independent FACET developer",
-      websiteUrl: null,
-      contact: null,
+      provider: "tai-hung-dev",
       walletAddress: "0x9265c1c87fC5fb3C72Dc68b4D3A005dE1E22C3cf",
       walletVerifiedAt: "2026-11-18T12:00:00Z",
       status: "active",
-      revision: 1,
       createdAt: "2026-11-18T12:00:00Z",
       updatedAt: "2026-11-18T12:00:00Z",
     };
     expect(validateAgainstSchema(providerSchema, providerSample)).toEqual([]);
 
+    const endpointReqSchema = await readSchema(
+      "endpoint-config-request.v0.15.json",
+    );
+    const endpointReq: EndpointConfigRequest = {
+      revision: 1,
+      baseUrl: "https://api.example.com",
+      auth: { kind: "NONE" },
+      timeoutMs: 5000,
+      maxResponseBytes: 65536,
+      redirectPolicy: "DENY",
+    };
+    expect(validateAgainstSchema(endpointReqSchema, endpointReq)).toEqual([]);
+
     const paidSuccess: InvokeFacetResponse = {
       runId: "b55dcf50-5e15-42df-9cf6-a480efd5157d",
-      creator: "tai-hung-dev",
+      provider: "tai-hung-dev",
       facetName: "vn-gold-fx-actor",
       facetDisplayName: "VN Gold & FX Normalizer",
       version: "1.0.0",
@@ -612,7 +612,7 @@ describe("v0.15.0 canonical Option B contracts", () => {
         network: "eip155:43113",
         amountAtomic: "1000",
         payer: "0xFA8cCB3C5145fca08f22675ea740e89B1D3a317f",
-        creatorPayTo: "0x9265c1c87fC5fb3C72Dc68b4D3A005dE1E22C3cf",
+        providerPayTo: "0x9265c1c87fC5fb3C72Dc68b4D3A005dE1E22C3cf",
       },
       receipt: {
         inputHash: "sha256:" + "e".repeat(64),
@@ -627,7 +627,7 @@ describe("v0.15.0 canonical Option B contracts", () => {
 
     const pending: InvokeFacetPendingResponse = {
       runId: "b55dcf50-5e15-42df-9cf6-a480efd5157d",
-      creator: "tai-hung-dev",
+      provider: "tai-hung-dev",
       facetName: "vn-gold-fx-actor",
       version: "1.0.0",
       payment: {

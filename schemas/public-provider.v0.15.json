@@ -5,35 +5,19 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "creator",
-    "displayName",
-    "description",
-    "websiteUrl",
-    "contact",
+    "provider",
     "walletAddress",
     "walletVerifiedAt",
     "status",
-    "revision",
     "createdAt",
     "updatedAt"
   ],
   "properties": {
-    "creator": {
+    "provider": {
       "type": "string",
       "minLength": 8,
       "maxLength": 16,
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
-    },
-    "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
-    "description": { "type": "string", "maxLength": 2000 },
-    "websiteUrl": {
-      "anyOf": [
-        { "type": "string", "format": "uri", "maxLength": 2048 },
-        { "type": "null" }
-      ]
-    },
-    "contact": {
-      "anyOf": [{ "type": "string", "maxLength": 320 }, { "type": "null" }]
     },
     "walletAddress": {
       "anyOf": [
@@ -45,7 +29,6 @@
       "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }]
     },
     "status": { "enum": ["active", "disabled"] },
-    "revision": { "type": "integer", "minimum": 1 },
     "createdAt": { "type": "string", "format": "date-time" },
     "updatedAt": { "type": "string", "format": "date-time" }
   }

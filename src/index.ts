@@ -17,21 +17,21 @@ export interface FacetApiError {
 }
 
 export {
-  CREATOR_USERNAME_MAX,
-  CREATOR_USERNAME_MIN,
-  CREATOR_USERNAME_PATTERN,
-  CREATOR_USERNAME_REGEX,
   FACET_NAME_MAX,
   FACET_NAME_MIN,
   FACET_NAME_PATTERN,
   FACET_NAME_REGEX,
   SEMVER_PATTERN,
   SEMVER_REGEX,
+  USERNAME_MAX,
+  USERNAME_MIN,
+  USERNAME_PATTERN,
+  USERNAME_REGEX,
   bumpPatchSemver,
   compareSemver,
-  isValidCreatorUsername,
   isValidFacetName,
   isValidSemver,
+  isValidUsername,
   parseSemver,
   suggestFacetName,
   type SemVerParts,
@@ -39,14 +39,9 @@ export {
 
 export type {
   ClerkUserWebhookPayload,
-  CreateProviderRequest,
   CurrentUser,
-  ProviderMembership,
-  ProviderRole,
-  ProviderStatus,
   PublicProvider,
-  UpdateProviderMembershipRequest,
-  UpdateProviderRequest,
+  UserStatus,
   WalletLinkChallengeRequest,
   WalletLinkChallengeResponse,
   WalletLinkRequest,
@@ -146,16 +141,12 @@ export const WALLET_LINK_RESPONSE_SCHEMA_ID =
 
 export const PUBLIC_PROVIDER_V015_SCHEMA_ID =
   "https://facet.local/schemas/public-provider.v0.15.json" as const;
-export const CREATE_PROVIDER_REQUEST_V015_SCHEMA_ID =
-  "https://facet.local/schemas/create-provider-request.v0.15.json" as const;
-export const UPDATE_PROVIDER_REQUEST_V015_SCHEMA_ID =
-  "https://facet.local/schemas/update-provider-request.v0.15.json" as const;
-export const PROVIDER_MEMBERSHIP_V015_SCHEMA_ID =
-  "https://facet.local/schemas/provider-membership.v0.15.json" as const;
 export const CREATE_FACET_DRAFTS_REQUEST_V015_SCHEMA_ID =
   "https://facet.local/schemas/create-facet-drafts-request.v0.15.json" as const;
 export const CREATE_FACET_DRAFTS_RESPONSE_V015_SCHEMA_ID =
   "https://facet.local/schemas/create-facet-drafts-response.v0.15.json" as const;
+export const ENDPOINT_CONFIG_REQUEST_V015_SCHEMA_ID =
+  "https://facet.local/schemas/endpoint-config-request.v0.15.json" as const;
 export const ENDPOINT_CONFIG_RESPONSE_V015_SCHEMA_ID =
   "https://facet.local/schemas/endpoint-config-response.v0.15.json" as const;
 export const VALIDATE_FACET_VERSION_REQUEST_V015_SCHEMA_ID =
@@ -213,7 +204,5 @@ export const ROTATE_SECRET_REQUEST_SCHEMA_ID =
   "https://facet.local/schemas/rotate-secret-request.v0.7.json" as const;
 export const SECRET_REF_RESPONSE_SCHEMA_ID =
   "https://facet.local/schemas/secret-ref-response.v0.7.json" as const;
-export const ENDPOINT_CONFIG_REQUEST_SCHEMA_ID =
-  "https://facet.local/schemas/endpoint-config-request.v0.7.json" as const;
 export const FACET_MANIFEST_SCHEMA_ID =
   "https://facet.local/schemas/facet-manifest.v1.json" as const;

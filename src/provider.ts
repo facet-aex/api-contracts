@@ -1,54 +1,21 @@
-export type ProviderStatus = "active" | "disabled";
-export type ProviderRole = "owner" | "admin" | "developer" | "viewer";
+export type UserStatus = "active" | "disabled";
 
+/** Public view of a User acting as a Facet provider (`provider` = `users.username`). */
 export interface PublicProvider {
-  creator: string;
-  displayName: string;
-  description: string;
-  websiteUrl: string | null;
-  contact: string | null;
+  provider: string;
   walletAddress: string | null;
   walletVerifiedAt: string | null;
-  status: ProviderStatus;
-  revision: number;
+  status: UserStatus;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface CreateProviderRequest {
-  creator: string;
-  displayName: string;
-  description?: string;
-  websiteUrl?: string;
-  contact?: string;
-  walletAddress?: string;
-}
-
-export interface UpdateProviderRequest {
-  revision: number;
-  displayName?: string;
-  description?: string;
-  websiteUrl?: string | null;
-  contact?: string | null;
-  walletAddress?: string | null;
 }
 
 export interface CurrentUser {
   clerkId: string;
   username: string;
-  email: string | null;
-  displayName: string | null;
-}
-
-export interface ProviderMembership {
-  user: CurrentUser;
-  role: ProviderRole;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface UpdateProviderMembershipRequest {
-  role: ProviderRole;
+  walletAddress: string | null;
+  walletVerifiedAt: string | null;
+  status: UserStatus;
 }
 
 export interface ClerkUserWebhookPayload {
@@ -56,8 +23,6 @@ export interface ClerkUserWebhookPayload {
   data: {
     id: string;
     username?: string | null;
-    email_addresses?: Array<{ id?: string; email_address?: string }>;
-    primary_email_address_id?: string | null;
     deleted?: boolean;
   };
 }

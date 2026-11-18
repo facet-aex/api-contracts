@@ -1,7 +1,7 @@
-export const CREATOR_USERNAME_MIN = 8 as const;
-export const CREATOR_USERNAME_MAX = 16 as const;
-export const CREATOR_USERNAME_PATTERN = "^[a-z0-9]+(?:-[a-z0-9]+)*$" as const;
-export const CREATOR_USERNAME_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
+export const USERNAME_MIN = 8 as const;
+export const USERNAME_MAX = 16 as const;
+export const USERNAME_PATTERN = "^[a-z0-9]+(?:-[a-z0-9]+)*$" as const;
+export const USERNAME_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 
 export const FACET_NAME_MIN = 4 as const;
 export const FACET_NAME_MAX = 32 as const;
@@ -13,11 +13,11 @@ export const SEMVER_PATTERN =
 export const SEMVER_REGEX =
   /^(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)$/u;
 
-export function isValidCreatorUsername(value: string): boolean {
+export function isValidUsername(value: string): boolean {
   return (
-    value.length >= CREATOR_USERNAME_MIN &&
-    value.length <= CREATOR_USERNAME_MAX &&
-    CREATOR_USERNAME_REGEX.test(value)
+    value.length >= USERNAME_MIN &&
+    value.length <= USERNAME_MAX &&
+    USERNAME_REGEX.test(value)
   );
 }
 

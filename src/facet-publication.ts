@@ -7,7 +7,7 @@ export interface PublishFacetVersionRequest {
 
 export interface PublishFacetVersionResponse {
   facet: {
-    creator: string;
+    provider: string;
     facetName: string;
     facetDisplayName: string;
     facetType: "API" | "ACTOR" | "AGENT";
@@ -17,7 +17,7 @@ export interface PublishFacetVersionResponse {
     revision: number;
   };
   facetVersion: {
-    creator: string;
+    provider: string;
     facetName: string;
     version: string;
     status: "PUBLISHED";

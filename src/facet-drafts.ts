@@ -39,7 +39,7 @@ export interface FacetDraftVersion {
 }
 
 export interface FacetDraft {
-  creator: string;
+  provider: string;
   facetName: string;
   facetDisplayName: string;
   type: "API";

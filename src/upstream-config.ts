@@ -30,7 +30,7 @@ export type EndpointAuthKind =
   "NONE" | "API_KEY_HEADER" | "API_KEY_QUERY" | "BEARER";
 
 export interface EndpointConfigRequest {
-  version: number;
+  revision: number;
   baseUrl: string;
   auth: {
     kind: EndpointAuthKind;
@@ -43,7 +43,7 @@ export interface EndpointConfigRequest {
 }
 
 export interface EndpointConfigMetadata {
-  creator: string;
+  provider: string;
   facetName: string;
   version: string;
   facetVersionRevision: number;

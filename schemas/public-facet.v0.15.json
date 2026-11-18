@@ -5,7 +5,7 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "creator",
+    "provider",
     "facetName",
     "facetDisplayName",
     "version",
@@ -20,7 +20,7 @@
     "publishedAt"
   ],
   "properties": {
-    "creator": {
+    "provider": {
       "type": "string",
       "minLength": 8,
       "maxLength": 16,

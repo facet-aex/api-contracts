@@ -6,7 +6,7 @@ import type {
 } from "./actor-and-agent.js";
 
 export interface PublicFacet {
-  creator: string;
+  provider: string;
   facetName: string;
   facetDisplayName: string;
   version: string;

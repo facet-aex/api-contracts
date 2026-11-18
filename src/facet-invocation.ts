@@ -9,7 +9,7 @@ export interface InvokeFacetPayment {
   network: "eip155:43113";
   amountAtomic: string;
   payer: string;
-  creatorPayTo: string;
+  providerPayTo: string;
   payTo?: string;
 }
 
@@ -24,7 +24,7 @@ export interface RunReceiptMetadata {
 
 export interface InvokeFacetResponse {
   runId: string;
-  creator: string;
+  provider: string;
   facetName: string;
   facetDisplayName: string;
   version: string;
@@ -45,7 +45,7 @@ export type InvokeFacetPendingStatus =
 
 export interface InvokeFacetPendingResponse {
   runId: string;
-  creator: string;
+  provider: string;
   facetName: string;
   version: string;
   payment: {

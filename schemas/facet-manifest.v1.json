@@ -9,7 +9,7 @@
     "facetId",
     "versionId",
     "providerId",
-    "creator",
+    "provider",
     "facetName",
     "facetDisplayName",
     "version",
@@ -29,7 +29,7 @@
     "facetId": { "type": "string", "format": "uuid" },
     "versionId": { "type": "string", "format": "uuid" },
     "providerId": { "type": "string", "format": "uuid" },
-    "creator": {
+    "provider": {
       "type": "string",
       "minLength": 8,
       "maxLength": 16,

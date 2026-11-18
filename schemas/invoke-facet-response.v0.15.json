@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": [
     "runId",
-    "creator",
+    "provider",
     "facetName",
     "facetDisplayName",
     "version",
@@ -18,7 +18,7 @@
   ],
   "properties": {
     "runId": { "type": "string", "format": "uuid" },
-    "creator": {
+    "provider": {
       "type": "string",
       "minLength": 8,
       "maxLength": 16,
@@ -67,14 +67,17 @@
         "network",
         "amountAtomic",
         "payer",
-        "creatorPayTo"
+        "providerPayTo"
       ],
       "properties": {
         "transaction": { "type": "string", "pattern": "^0x[a-fA-F0-9]{64}$" },
         "network": { "const": "eip155:43113" },
         "amountAtomic": { "type": "string", "pattern": "^[0-9]+$" },
         "payer": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" },
-        "creatorPayTo": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" },
+        "providerPayTo": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+        },
         "payTo": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" }
       }
     },

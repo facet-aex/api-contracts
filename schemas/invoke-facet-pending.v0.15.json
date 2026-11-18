@@ -4,10 +4,10 @@
   "title": "InvokeFacetPendingResponseV015",
   "type": "object",
   "additionalProperties": false,
-  "required": ["runId", "creator", "facetName", "version", "payment"],
+  "required": ["runId", "provider", "facetName", "version", "payment"],
   "properties": {
     "runId": { "type": "string", "format": "uuid" },
-    "creator": {
+    "provider": {
       "type": "string",
       "minLength": 8,
       "maxLength": 16,
