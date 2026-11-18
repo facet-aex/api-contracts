@@ -37,6 +37,7 @@ export interface CreateActorRequest {
   providerId: string;
   name: string;
   slug: string;
+  displayVersion?: string;
   summary?: string;
   description: string;
   category: string;
@@ -67,6 +68,7 @@ export interface CreateAgentFacetRequest {
   providerId: string;
   name: string;
   slug: string;
+  displayVersion?: string;
   summary?: string;
   description: string;
   category: string;
@@ -158,6 +160,7 @@ export interface CreateActorRequestV014 {
   providerId: string;
   name: string;
   slug: string;
+  displayVersion?: string;
   summary?: string;
   description: string;
   category: string;
@@ -175,6 +178,8 @@ export interface CreateActorPendingResponse {
     id: string;
     versionId: string;
     slug?: string;
+    fullName?: string;
+    displayVersion?: string;
     facetType?: "HOSTED_ACTOR";
     status: "REGISTRATION_PENDING";
     visibility: "PRIVATE";
@@ -188,6 +193,8 @@ export type ActorPublishStatus =
 export interface ActorPublishStatusResponse {
   facetId: string;
   versionId: string;
+  fullName?: string;
+  displayVersion?: string;
   status: ActorPublishStatus;
   registryTxHash?: string;
   errorCode?: string;

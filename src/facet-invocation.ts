@@ -56,6 +56,8 @@ export interface RunReceiptMetadataV014 {
 export interface InvokeFacetResponseV014 {
   runId: string;
   facetVersionId: string;
+  facetFullName?: string;
+  displayVersion?: string;
   facetType?: FacetType;
   result: unknown;
   dataset?: Record<string, unknown>[];

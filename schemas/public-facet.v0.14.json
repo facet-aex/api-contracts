@@ -25,6 +25,10 @@
     "id": { "type": "string", "format": "uuid" },
     "versionId": { "type": "string", "format": "uuid" },
     "slug": { "type": "string" },
+    "fullName": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*/[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
     "name": { "type": "string" },
     "description": { "type": "string" },
     "category": { "type": "string" },

@@ -4,6 +4,7 @@ export type ProviderRole = "owner" | "admin" | "developer" | "viewer";
 export interface PublicProvider {
   id: string;
   slug: string;
+  username?: string | null;
   name: string;
   description: string;
   websiteUrl: string | null;
@@ -35,6 +36,7 @@ export interface UpdateProviderRequest {
 
 export interface CurrentUser {
   id: string;
+  username?: string | null;
   email: string | null;
   displayName: string | null;
 }

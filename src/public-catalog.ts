@@ -9,6 +9,7 @@ export interface PublicFacet {
   id: string;
   versionId: string;
   slug: string;
+  fullName?: string;
   name: string;
   description: string;
   category: string;

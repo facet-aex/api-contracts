@@ -15,6 +15,14 @@
   "properties": {
     "runId": { "type": "string", "format": "uuid" },
     "facetVersionId": { "type": "string", "format": "uuid" },
+    "facetFullName": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*/[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "displayVersion": {
+      "type": "string",
+      "pattern": "^v?[0-9]+(?:\\.[0-9]+\\.[0-9]+)?$"
+    },
     "facetType": {
       "enum": ["EXTERNAL_HTTP_API", "HOSTED_ACTOR", "AUTONOMOUS_AGENT"]
     },
