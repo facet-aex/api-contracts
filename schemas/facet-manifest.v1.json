@@ -8,11 +8,12 @@
     "schemaVersion",
     "facetId",
     "versionId",
-    "displayVersion",
     "providerId",
+    "creator",
+    "facetName",
+    "facetDisplayName",
+    "version",
     "type",
-    "name",
-    "slug",
     "summary",
     "description",
     "category",
@@ -27,16 +28,25 @@
     "schemaVersion": { "const": "facet.manifest/v1" },
     "facetId": { "type": "string", "format": "uuid" },
     "versionId": { "type": "string", "format": "uuid" },
-    "displayVersion": { "type": "string", "minLength": 1 },
     "providerId": { "type": "string", "format": "uuid" },
-    "type": {
-      "enum": ["EXTERNAL_HTTP_API", "HOSTED_ACTOR", "AUTONOMOUS_AGENT"]
-    },
-    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
-    "slug": {
+    "creator": {
       "type": "string",
+      "minLength": 8,
+      "maxLength": 16,
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
     },
+    "facetName": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 32,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "facetDisplayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "version": {
+      "type": "string",
+      "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$"
+    },
+    "type": { "enum": ["API", "ACTOR", "AGENT"] },
     "summary": { "type": "string", "maxLength": 280 },
     "description": { "type": "string", "maxLength": 10000 },
     "category": { "type": "string", "minLength": 1, "maxLength": 80 },

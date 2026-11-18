@@ -1,20 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://facet.local/schemas/public-facet.v0.14.json",
-  "title": "PublicFacetV014",
+  "$id": "https://facet.local/schemas/public-facet.v0.15.json",
+  "title": "PublicFacetV015",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "id",
-    "versionId",
-    "slug",
-    "name",
+    "creator",
+    "facetName",
+    "facetDisplayName",
+    "version",
+    "facetType",
     "description",
     "category",
     "tags",
-    "facetType",
-    "provider",
-    "displayVersion",
     "method",
     "inputSchema",
     "outputSchema",
@@ -22,31 +20,27 @@
     "publishedAt"
   ],
   "properties": {
-    "id": { "type": "string", "format": "uuid" },
-    "versionId": { "type": "string", "format": "uuid" },
-    "slug": { "type": "string" },
-    "fullName": {
+    "creator": {
       "type": "string",
-      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*/[a-z0-9]+(?:-[a-z0-9]+)*$"
+      "minLength": 8,
+      "maxLength": 16,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
     },
-    "name": { "type": "string" },
+    "facetName": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 32,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "facetDisplayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "version": {
+      "type": "string",
+      "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$"
+    },
+    "facetType": { "enum": ["API", "ACTOR", "AGENT"] },
     "description": { "type": "string" },
     "category": { "type": "string" },
     "tags": { "type": "array", "items": { "type": "string" } },
-    "facetType": {
-      "enum": ["EXTERNAL_HTTP_API", "HOSTED_ACTOR", "AUTONOMOUS_AGENT"]
-    },
-    "provider": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "name", "slug"],
-      "properties": {
-        "id": { "type": "string", "format": "uuid" },
-        "name": { "type": "string" },
-        "slug": { "type": "string" }
-      }
-    },
-    "displayVersion": { "type": "string" },
     "method": { "type": "string" },
     "inputSchema": {},
     "outputSchema": {},

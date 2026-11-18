@@ -1,20 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://facet.local/schemas/actor-preview-response.v0.14.json",
-  "title": "ActorPreviewResponseV014",
+  "$id": "https://facet.local/schemas/actor-preview-response.v0.15.json",
+  "title": "ActorPreviewResponseV015",
   "type": "object",
   "additionalProperties": false,
   "required": ["result", "dataset", "logs", "usage"],
   "properties": {
     "result": {},
-    "dataset": {
-      "type": "array",
-      "items": { "type": "object" }
-    },
-    "logs": {
-      "type": "array",
-      "items": { "type": "string" }
-    },
+    "dataset": { "type": "array", "items": { "type": "object" } },
+    "logs": { "type": "array", "items": { "type": "string" } },
     "usage": {
       "type": "object",
       "additionalProperties": false,
@@ -26,10 +20,7 @@
           "type": "string",
           "pattern": "^sha256:[a-f0-9]{64}$"
         },
-        "runnerSignature": {
-          "type": "string",
-          "pattern": "^0x[a-fA-F0-9]+$"
-        }
+        "runnerSignature": { "type": "string", "pattern": "^0x[a-fA-F0-9]+$" }
       }
     }
   }

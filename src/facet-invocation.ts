@@ -4,38 +4,7 @@ export interface InvokeFacetRequest {
   input: Record<string, unknown>;
 }
 
-export interface RunReceiptMetadata {
-  inputHash: string;
-  outputHash: string;
-  itemCount: number;
-  paymentTxHash: string;
-  receiptTxHash?: string;
-  runnerSignature: string;
-}
-
-export interface InvokeFacetResponse {
-  runId: string;
-  facetVersionId: string;
-  facetType?: FacetType;
-  result: unknown;
-  dataset?: Record<string, unknown>[];
-  usage?: ExecutorRunUsage;
-  replayed: boolean;
-  payment?: {
-    transaction: string;
-    network: "eip155:43113";
-    amountAtomic?: string;
-    payTo?: string;
-  };
-  receipt?: RunReceiptMetadata;
-}
-
-export interface InvokeFacetPendingResponse {
-  runId: string;
-  payment: { status: "settlement_pending" };
-}
-
-export interface InvokeFacetPaymentV014 {
+export interface InvokeFacetPayment {
   transaction: string;
   network: "eip155:43113";
   amountAtomic: string;
@@ -44,7 +13,7 @@ export interface InvokeFacetPaymentV014 {
   payTo?: string;
 }
 
-export interface RunReceiptMetadataV014 {
+export interface RunReceiptMetadata {
   inputHash: string;
   outputHash: string;
   itemCount: number;
@@ -53,18 +22,19 @@ export interface RunReceiptMetadataV014 {
   runnerSignature: string;
 }
 
-export interface InvokeFacetResponseV014 {
+export interface InvokeFacetResponse {
   runId: string;
-  facetVersionId: string;
-  facetFullName?: string;
-  displayVersion?: string;
-  facetType?: FacetType;
+  creator: string;
+  facetName: string;
+  facetDisplayName: string;
+  version: string;
+  facetType: FacetType;
   result: unknown;
   dataset?: Record<string, unknown>[];
   usage?: ExecutorRunUsage;
   replayed: boolean;
-  payment: InvokeFacetPaymentV014;
-  receipt: RunReceiptMetadataV014;
+  payment: InvokeFacetPayment;
+  receipt: RunReceiptMetadata;
 }
 
 export type InvokeFacetPendingStatus =
@@ -73,8 +43,11 @@ export type InvokeFacetPendingStatus =
   | "escrow_pending"
   | "refund_pending";
 
-export interface InvokeFacetPendingResponseV014 {
+export interface InvokeFacetPendingResponse {
   runId: string;
+  creator: string;
+  facetName: string;
+  version: string;
   payment: {
     status: InvokeFacetPendingStatus;
     transaction?: string;

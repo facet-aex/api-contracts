@@ -2,23 +2,22 @@ export type ProviderStatus = "active" | "disabled";
 export type ProviderRole = "owner" | "admin" | "developer" | "viewer";
 
 export interface PublicProvider {
-  id: string;
-  slug: string;
-  username?: string | null;
-  name: string;
+  creator: string;
+  displayName: string;
   description: string;
   websiteUrl: string | null;
   contact: string | null;
   walletAddress: string | null;
+  walletVerifiedAt: string | null;
   status: ProviderStatus;
-  version: number;
+  revision: number;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface CreateProviderRequest {
-  slug: string;
-  name: string;
+  creator: string;
+  displayName: string;
   description?: string;
   websiteUrl?: string;
   contact?: string;
@@ -26,8 +25,8 @@ export interface CreateProviderRequest {
 }
 
 export interface UpdateProviderRequest {
-  version: number;
-  name?: string;
+  revision: number;
+  displayName?: string;
   description?: string;
   websiteUrl?: string | null;
   contact?: string | null;
@@ -35,8 +34,8 @@ export interface UpdateProviderRequest {
 }
 
 export interface CurrentUser {
-  id: string;
-  username?: string | null;
+  clerkId: string;
+  username: string;
   email: string | null;
   displayName: string | null;
 }
@@ -50,6 +49,17 @@ export interface ProviderMembership {
 
 export interface UpdateProviderMembershipRequest {
   role: ProviderRole;
+}
+
+export interface ClerkUserWebhookPayload {
+  type: "user.created" | "user.updated" | "user.deleted";
+  data: {
+    id: string;
+    username?: string | null;
+    email_addresses?: Array<{ id?: string; email_address?: string }>;
+    primary_email_address_id?: string | null;
+    deleted?: boolean;
+  };
 }
 
 export type WalletLinkChallengeRequest = Record<string, never>;

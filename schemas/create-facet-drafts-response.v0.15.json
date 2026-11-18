@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://facet.local/schemas/create-facet-drafts-response.v0.5.json",
-  "title": "Created Facet drafts",
+  "$id": "https://facet.local/schemas/create-facet-drafts-response.v0.15.json",
+  "title": "CreateFacetDraftsResponseV015",
   "type": "object",
   "additionalProperties": false,
   "required": ["facets"],
@@ -17,24 +17,38 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "id",
-        "providerId",
-        "slug",
+        "creator",
+        "facetName",
+        "facetDisplayName",
         "type",
         "status",
         "visibility",
-        "version",
+        "revision",
         "createdAt",
         "draftVersion"
       ],
       "properties": {
-        "id": { "type": "string", "format": "uuid" },
-        "providerId": { "type": "string", "format": "uuid" },
-        "slug": { "type": "string", "minLength": 1 },
-        "type": { "const": "EXTERNAL_HTTP_API" },
+        "creator": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 16,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "facetName": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 32,
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "facetDisplayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "type": { "const": "API" },
         "status": { "const": "DRAFT" },
         "visibility": { "const": "PRIVATE" },
-        "version": { "type": "integer", "minimum": 1 },
+        "revision": { "type": "integer", "minimum": 1 },
         "createdAt": { "type": "string", "format": "date-time" },
         "draftVersion": { "$ref": "#/$defs/facetDraftVersion" }
       }
@@ -43,23 +57,24 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "id",
-        "displayVersion",
+        "version",
         "status",
         "sourceVersionId",
         "sourceOperationPointer",
         "contentHash",
-        "version",
+        "revision",
         "validation"
       ],
       "properties": {
-        "id": { "type": "string", "format": "uuid" },
-        "displayVersion": { "type": "string", "minLength": 1 },
+        "version": {
+          "type": "string",
+          "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$"
+        },
         "status": { "const": "DRAFT" },
         "sourceVersionId": { "type": "string", "format": "uuid" },
         "sourceOperationPointer": { "type": "string", "pattern": "^#/paths/" },
         "contentHash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
-        "version": { "type": "integer", "minimum": 1 },
+        "revision": { "type": "integer", "minimum": 1 },
         "validation": {
           "type": "object",
           "additionalProperties": false,

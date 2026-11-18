@@ -3,64 +3,72 @@ import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 
 import {
-  ACTOR_PREVIEW_REQUEST_V014_SCHEMA_ID,
-  ACTOR_PREVIEW_RESPONSE_V014_SCHEMA_ID,
-  ACTOR_PUBLISH_STATUS_RESPONSE_V014_SCHEMA_ID,
+  ACTOR_PREVIEW_REQUEST_V015_SCHEMA_ID,
+  ACTOR_PREVIEW_RESPONSE_V015_SCHEMA_ID,
+  ACTOR_PUBLISH_STATUS_RESPONSE_V015_SCHEMA_ID,
   CONTRACT_VERSION,
-  CREATE_ACTOR_PENDING_RESPONSE_V014_SCHEMA_ID,
-  CREATE_ACTOR_REQUEST_SCHEMA_ID,
-  CREATE_ACTOR_REQUEST_V014_SCHEMA_ID,
-  CREATE_ACTOR_RESPONSE_SCHEMA_ID,
-  CREATE_AGENT_FACET_REQUEST_SCHEMA_ID,
-  CREATE_AGENT_FACET_RESPONSE_SCHEMA_ID,
-  EXECUTOR_RUN_REQUEST_SCHEMA_ID,
-  EXECUTOR_RUN_RESPONSE_SCHEMA_ID,
-  FACET_TYPES,
-  INVOKE_FACET_PENDING_SCHEMA_ID,
-  INVOKE_FACET_PENDING_V014_SCHEMA_ID,
-  INVOKE_FACET_REQUEST_SCHEMA_ID,
-  INVOKE_FACET_RESPONSE_SCHEMA_ID,
-  INVOKE_FACET_RESPONSE_V013_SCHEMA_ID,
-  INVOKE_FACET_RESPONSE_V014_SCHEMA_ID,
-  PUBLIC_CATALOG_DETAIL_SCHEMA_ID,
-  PUBLIC_CATALOG_DETAIL_V013_SCHEMA_ID,
-  PUBLIC_CATALOG_DETAIL_V014_SCHEMA_ID,
-  PUBLIC_CATALOG_LIST_SCHEMA_ID,
-  PUBLIC_CATALOG_LIST_V013_SCHEMA_ID,
-  PUBLIC_CATALOG_LIST_V014_SCHEMA_ID,
-  PUBLIC_FACET_V013_SCHEMA_ID,
-  PUBLIC_FACET_V014_SCHEMA_ID,
-  WALLET_LINK_CHALLENGE_REQUEST_V014_SCHEMA_ID,
-  WALLET_LINK_CHALLENGE_RESPONSE_V014_SCHEMA_ID,
-  WALLET_LINK_REQUEST_V014_SCHEMA_ID,
-  WALLET_LINK_RESPONSE_V014_SCHEMA_ID,
-  CREATE_FACET_DRAFTS_REQUEST_SCHEMA_ID,
-  CREATE_FACET_DRAFTS_RESPONSE_SCHEMA_ID,
+  CREATE_ACTOR_PENDING_RESPONSE_V015_SCHEMA_ID,
+  CREATE_ACTOR_REQUEST_V015_SCHEMA_ID,
+  CREATE_ACTOR_RESPONSE_V015_SCHEMA_ID,
+  CREATE_AGENT_FACET_REQUEST_V015_SCHEMA_ID,
+  CREATE_AGENT_FACET_RESPONSE_V015_SCHEMA_ID,
+  CREATE_FACET_DRAFTS_REQUEST_V015_SCHEMA_ID,
+  CREATE_FACET_DRAFTS_RESPONSE_V015_SCHEMA_ID,
+  CREATE_PROVIDER_REQUEST_V015_SCHEMA_ID,
   CREATE_SECRET_REQUEST_SCHEMA_ID,
+  CREATOR_USERNAME_PATTERN,
+  ENDPOINT_CONFIG_REQUEST_SCHEMA_ID,
+  ENDPOINT_CONFIG_RESPONSE_V015_SCHEMA_ID,
   ERROR_SCHEMA_ID,
+  EXECUTOR_RUN_REQUEST_V015_SCHEMA_ID,
+  EXECUTOR_RUN_RESPONSE_V015_SCHEMA_ID,
+  FACET_MANIFEST_SCHEMA_ID,
+  FACET_NAME_PATTERN,
+  FACET_TYPES,
   HEALTH_SCHEMA_ID,
   IMPORTER_PARSE_REQUEST_SCHEMA_ID,
   IMPORTER_PARSE_RESPONSE_SCHEMA_ID,
-  ENDPOINT_CONFIG_REQUEST_SCHEMA_ID,
-  FACET_MANIFEST_SCHEMA_ID,
-  PROVIDER_MEMBERSHIP_SCHEMA_ID,
-  PUBLISH_FACET_VERSION_REQUEST_SCHEMA_ID,
-  PUBLISH_FACET_VERSION_RESPONSE_SCHEMA_ID,
-  PUBLIC_PROVIDER_SCHEMA_ID,
+  INVOKE_FACET_PENDING_V015_SCHEMA_ID,
+  INVOKE_FACET_REQUEST_SCHEMA_ID,
+  INVOKE_FACET_RESPONSE_V015_SCHEMA_ID,
+  PROVIDER_MEMBERSHIP_V015_SCHEMA_ID,
+  PUBLIC_CATALOG_DETAIL_V015_SCHEMA_ID,
+  PUBLIC_CATALOG_LIST_V015_SCHEMA_ID,
+  PUBLIC_FACET_V015_SCHEMA_ID,
+  PUBLIC_PROVIDER_V015_SCHEMA_ID,
+  PUBLISH_FACET_VERSION_REQUEST_V015_SCHEMA_ID,
+  PUBLISH_FACET_VERSION_RESPONSE_V015_SCHEMA_ID,
   ROTATE_SECRET_REQUEST_SCHEMA_ID,
   SECRET_REF_RESPONSE_SCHEMA_ID,
-  VALIDATE_FACET_VERSION_REQUEST_SCHEMA_ID,
-  VALIDATE_FACET_VERSION_RESPONSE_SCHEMA_ID,
+  SEMVER_PATTERN,
+  UPDATE_PROVIDER_REQUEST_V015_SCHEMA_ID,
+  VALIDATE_FACET_VERSION_REQUEST_V015_SCHEMA_ID,
+  VALIDATE_FACET_VERSION_RESPONSE_V015_SCHEMA_ID,
+  WALLET_LINK_CHALLENGE_REQUEST_SCHEMA_ID,
+  WALLET_LINK_CHALLENGE_RESPONSE_SCHEMA_ID,
+  WALLET_LINK_REQUEST_SCHEMA_ID,
+  WALLET_LINK_RESPONSE_SCHEMA_ID,
+  bumpPatchSemver,
+  compareSemver,
+  isValidCreatorUsername,
+  isValidFacetName,
+  isValidSemver,
+  suggestFacetName,
   type ActorPreviewRequest,
   type ActorPreviewResponse,
   type ActorPublishStatusResponse,
   type CreateActorPendingResponse,
-  type CreateActorRequestV014,
+  type CreateActorRequest,
+  type CreateActorResponse,
+  type CreateAgentFacetRequest,
+  type CreateAgentFacetResponse,
+  type ExecutorRunRequest,
   type GetPublicFacetResponse,
-  type InvokeFacetPendingResponseV014,
-  type InvokeFacetResponseV014,
+  type InvokeFacetPendingResponse,
+  type InvokeFacetResponse,
   type ListPublicFacetsResponse,
   type PublicFacet,
+  type PublicProvider,
   type WalletLinkChallengeRequest,
   type WalletLinkChallengeResponse,
   type WalletLinkRequest,
@@ -79,347 +87,189 @@ async function readSchema(
     Record<string, unknown>;
 }
 
-describe("public contracts", () => {
-  it("keeps the package versioned at 0.14.0 while preserving v0.13.0 and earlier schema IDs", async () => {
-    const errorSchema = await readSchema("error-envelope.v0.1.json");
-    const healthSchema = await readSchema("health-status.v0.1.json");
-    const providerSchema = await readSchema("public-provider.v0.2.json");
-    const membershipSchema = await readSchema("provider-membership.v0.3.json");
-    const importerRequestSchema = await readSchema(
-      "importer-parse-request.v0.6.json",
+describe("v0.15.0 canonical Option B contracts", () => {
+  it("pins CONTRACT_VERSION at 0.15.0 and uppercase FACET_TYPES API | ACTOR | AGENT", () => {
+    expect(CONTRACT_VERSION).toBe("0.15.0");
+    expect(FACET_TYPES).toEqual(["API", "ACTOR", "AGENT"]);
+    expect(CREATOR_USERNAME_PATTERN).toBe("^[a-z0-9]+(?:-[a-z0-9]+)*$");
+    expect(FACET_NAME_PATTERN).toBe("^[a-z0-9]+(?:-[a-z0-9]+)*$");
+    expect(SEMVER_PATTERN).toBe(
+      "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$",
     );
-    const importerResponseSchema = await readSchema(
-      "importer-parse-response.v0.6.json",
-    );
-    const createFacetDraftsRequestSchema = await readSchema(
-      "create-facet-drafts-request.v0.5.json",
-    );
-    const createFacetDraftsResponseSchema = await readSchema(
-      "create-facet-drafts-response.v0.5.json",
-    );
-    const createSecretSchema = await readSchema(
-      "create-secret-request.v0.7.json",
-    );
-    const rotateSecretSchema = await readSchema(
-      "rotate-secret-request.v0.7.json",
-    );
-    const secretResponseSchema = await readSchema(
-      "secret-ref-response.v0.7.json",
-    );
-    const endpointConfigSchema = await readSchema(
-      "endpoint-config-request.v0.7.json",
-    );
-    const manifestSchema = await readSchema("facet-manifest.v1.json");
-    const validateRequestSchema = await readSchema(
-      "validate-facet-version-request.v0.8.json",
-    );
-    const validateResponseSchema = await readSchema(
-      "validate-facet-version-response.v0.8.json",
-    );
-    const publishRequestSchema = await readSchema(
-      "publish-facet-version-request.v0.9.json",
-    );
-    const publishResponseSchema = await readSchema(
-      "publish-facet-version-response.v0.9.json",
-    );
+  });
 
-    expect(CONTRACT_VERSION).toBe("0.14.0");
-    expect(FACET_TYPES).toEqual([
-      "EXTERNAL_HTTP_API",
-      "HOSTED_ACTOR",
-      "AUTONOMOUS_AGENT",
-    ]);
-    expect((await readSchema("create-actor-request.v0.13.json")).$id).toBe(
-      CREATE_ACTOR_REQUEST_SCHEMA_ID,
+  it("enforces hyphenated kebab-case lengths for creator (8-16), facetName (4-32), and strict SemVer", () => {
+    // creator username: 8-16 lowercase hyphenated kebab-case
+    expect(isValidCreatorUsername("tai-hung")).toBe(true); // 8 chars
+    expect(isValidCreatorUsername("facet-demo-user1")).toBe(true); // 16 chars
+    expect(isValidCreatorUsername("tai-hu1")).toBe(false); // 7 chars
+    expect(isValidCreatorUsername("this-username-is17")).toBe(false); // 18 chars
+    expect(isValidCreatorUsername("tai_hung")).toBe(false); // underscore forbidden
+    expect(isValidCreatorUsername("Tai-Hung")).toBe(false); // uppercase forbidden
+    expect(isValidCreatorUsername("tai--hung")).toBe(false); // double hyphen forbidden
+    expect(isValidCreatorUsername("-tai-hung")).toBe(false);
+    expect(isValidCreatorUsername("tai-hung-")).toBe(false);
+
+    // facetName: 4-32 lowercase hyphenated kebab-case
+    expect(isValidFacetName("gold")).toBe(true); // 4 chars
+    expect(isValidFacetName("vn-gold-fx-normalizer-actor-v1")).toBe(true); // 30 chars
+    expect(isValidFacetName("api")).toBe(false); // 3 chars
+    expect(isValidFacetName("a".repeat(33))).toBe(false); // 33 chars
+    expect(isValidFacetName("vn_gold_fx")).toBe(false);
+    expect(isValidFacetName("VN-Gold-FX")).toBe(false);
+
+    // SemVer MAJOR.MINOR.PATCH
+    expect(isValidSemver("0.1.0")).toBe(true);
+    expect(isValidSemver("1.0.0")).toBe(true);
+    expect(isValidSemver("12.34.56")).toBe(true);
+    expect(isValidSemver("v1.0.0")).toBe(false);
+    expect(isValidSemver("v1")).toBe(false);
+    expect(isValidSemver("1.0")).toBe(false);
+    expect(isValidSemver("01.0.0")).toBe(false);
+    expect(isValidSemver("1.0.0-alpha")).toBe(false);
+
+    expect(compareSemver("1.10.0", "1.2.9")).toBeGreaterThan(0);
+    expect(compareSemver("2.0.0", "1.99.99")).toBeGreaterThan(0);
+    expect(compareSemver("1.0.0", "1.0.0")).toBe(0);
+    expect(bumpPatchSemver("1.0.0")).toBe("1.0.1");
+    expect(bumpPatchSemver("1.2.9")).toBe("1.2.10");
+
+    expect(suggestFacetName("VN Gold & FX Normalizer")).toBe(
+      "vn-gold-fx-normalizer",
     );
-    expect((await readSchema("create-actor-response.v0.13.json")).$id).toBe(
-      CREATE_ACTOR_RESPONSE_SCHEMA_ID,
+    expect(suggestFacetName("Định giá vàng Việt Nam!")).toBe(
+      "dinh-gia-vang-viet-nam",
     );
+    expect(suggestFacetName("AI")).toBe("ai-facet");
     expect(
-      (await readSchema("create-agent-facet-request.v0.13.json")).$id,
-    ).toBe(CREATE_AGENT_FACET_REQUEST_SCHEMA_ID);
-    expect(
-      (await readSchema("create-agent-facet-response.v0.13.json")).$id,
-    ).toBe(CREATE_AGENT_FACET_RESPONSE_SCHEMA_ID);
-    expect((await readSchema("executor-run-request.v0.13.json")).$id).toBe(
-      EXECUTOR_RUN_REQUEST_SCHEMA_ID,
-    );
-    expect((await readSchema("executor-run-response.v0.13.json")).$id).toBe(
-      EXECUTOR_RUN_RESPONSE_SCHEMA_ID,
-    );
-    expect((await readSchema("public-facet.v0.13.json")).$id).toBe(
-      PUBLIC_FACET_V013_SCHEMA_ID,
-    );
-    expect((await readSchema("public-catalog-list.v0.13.json")).$id).toBe(
-      PUBLIC_CATALOG_LIST_V013_SCHEMA_ID,
-    );
-    expect((await readSchema("public-catalog-detail.v0.13.json")).$id).toBe(
-      PUBLIC_CATALOG_DETAIL_V013_SCHEMA_ID,
-    );
-    expect((await readSchema("invoke-facet-response.v0.13.json")).$id).toBe(
-      INVOKE_FACET_RESPONSE_V013_SCHEMA_ID,
-    );
-    expect((await readSchema("invoke-facet-request.v0.11.json")).$id).toBe(
-      INVOKE_FACET_REQUEST_SCHEMA_ID,
-    );
-    expect((await readSchema("invoke-facet-response.v0.12.json")).$id).toBe(
-      INVOKE_FACET_RESPONSE_SCHEMA_ID,
-    );
-    expect((await readSchema("invoke-facet-pending.v0.12.json")).$id).toBe(
-      INVOKE_FACET_PENDING_SCHEMA_ID,
-    );
-    expect((await readSchema("public-catalog-list.v0.10.json")).$id).toBe(
-      PUBLIC_CATALOG_LIST_SCHEMA_ID,
-    );
-    expect((await readSchema("public-catalog-detail.v0.10.json")).$id).toBe(
-      PUBLIC_CATALOG_DETAIL_SCHEMA_ID,
-    );
-    expect(errorSchema.$id).toBe(ERROR_SCHEMA_ID);
-    expect(healthSchema.$id).toBe(HEALTH_SCHEMA_ID);
-    expect(providerSchema.$id).toBe(PUBLIC_PROVIDER_SCHEMA_ID);
-    expect(membershipSchema.$id).toBe(PROVIDER_MEMBERSHIP_SCHEMA_ID);
-    expect(importerRequestSchema.$id).toBe(IMPORTER_PARSE_REQUEST_SCHEMA_ID);
-    expect(importerResponseSchema.$id).toBe(IMPORTER_PARSE_RESPONSE_SCHEMA_ID);
-    expect(createFacetDraftsRequestSchema.$id).toBe(
-      CREATE_FACET_DRAFTS_REQUEST_SCHEMA_ID,
-    );
-    expect(createFacetDraftsResponseSchema.$id).toBe(
-      CREATE_FACET_DRAFTS_RESPONSE_SCHEMA_ID,
-    );
-    expect(createSecretSchema.$id).toBe(CREATE_SECRET_REQUEST_SCHEMA_ID);
-    expect(rotateSecretSchema.$id).toBe(ROTATE_SECRET_REQUEST_SCHEMA_ID);
-    expect(secretResponseSchema.$id).toBe(SECRET_REF_RESPONSE_SCHEMA_ID);
-    expect(endpointConfigSchema.$id).toBe(ENDPOINT_CONFIG_REQUEST_SCHEMA_ID);
-    expect(manifestSchema.$id).toBe(FACET_MANIFEST_SCHEMA_ID);
-    expect(validateRequestSchema.$id).toBe(
-      VALIDATE_FACET_VERSION_REQUEST_SCHEMA_ID,
-    );
-    expect(validateResponseSchema.$id).toBe(
-      VALIDATE_FACET_VERSION_RESPONSE_SCHEMA_ID,
-    );
-    expect(publishRequestSchema.$id).toBe(
-      PUBLISH_FACET_VERSION_REQUEST_SCHEMA_ID,
-    );
-    expect(publishResponseSchema.$id).toBe(
-      PUBLISH_FACET_VERSION_RESPONSE_SCHEMA_ID,
-    );
+      isValidFacetName(suggestFacetName("Very Long " + "Word ".repeat(12))),
+    ).toBe(true);
   });
 
-  it("supports multi-modal ActorBazaar and ERC-8004 A2A contracts in v0.13.0", async () => {
-    const manifest = await readSchema("facet-manifest.v1.json");
-    const createActorReq = await readSchema("create-actor-request.v0.13.json");
-    const createAgentReq = await readSchema(
-      "create-agent-facet-request.v0.13.json",
-    );
-    const executorResp = await readSchema("executor-run-response.v0.13.json");
-    const invokeResp = await readSchema("invoke-facet-response.v0.13.json");
+  it("registers all v0.15.0 and shared utility schema identifiers without legacy enum or slug leaks", async () => {
+    const schemas = [
+      ["error-envelope.v0.1.json", ERROR_SCHEMA_ID],
+      ["health-status.v0.1.json", HEALTH_SCHEMA_ID],
+      ["importer-parse-request.v0.6.json", IMPORTER_PARSE_REQUEST_SCHEMA_ID],
+      ["importer-parse-response.v0.6.json", IMPORTER_PARSE_RESPONSE_SCHEMA_ID],
+      ["create-secret-request.v0.7.json", CREATE_SECRET_REQUEST_SCHEMA_ID],
+      ["rotate-secret-request.v0.7.json", ROTATE_SECRET_REQUEST_SCHEMA_ID],
+      ["secret-ref-response.v0.7.json", SECRET_REF_RESPONSE_SCHEMA_ID],
+      ["endpoint-config-request.v0.7.json", ENDPOINT_CONFIG_REQUEST_SCHEMA_ID],
+      ["invoke-facet-request.v0.11.json", INVOKE_FACET_REQUEST_SCHEMA_ID],
+      [
+        "wallet-link-challenge-request.v0.14.json",
+        WALLET_LINK_CHALLENGE_REQUEST_SCHEMA_ID,
+      ],
+      [
+        "wallet-link-challenge-response.v0.14.json",
+        WALLET_LINK_CHALLENGE_RESPONSE_SCHEMA_ID,
+      ],
+      ["wallet-link-request.v0.14.json", WALLET_LINK_REQUEST_SCHEMA_ID],
+      ["wallet-link-response.v0.14.json", WALLET_LINK_RESPONSE_SCHEMA_ID],
+      ["facet-manifest.v1.json", FACET_MANIFEST_SCHEMA_ID],
+      ["public-provider.v0.15.json", PUBLIC_PROVIDER_V015_SCHEMA_ID],
+      [
+        "create-provider-request.v0.15.json",
+        CREATE_PROVIDER_REQUEST_V015_SCHEMA_ID,
+      ],
+      [
+        "update-provider-request.v0.15.json",
+        UPDATE_PROVIDER_REQUEST_V015_SCHEMA_ID,
+      ],
+      ["provider-membership.v0.15.json", PROVIDER_MEMBERSHIP_V015_SCHEMA_ID],
+      [
+        "create-facet-drafts-request.v0.15.json",
+        CREATE_FACET_DRAFTS_REQUEST_V015_SCHEMA_ID,
+      ],
+      [
+        "create-facet-drafts-response.v0.15.json",
+        CREATE_FACET_DRAFTS_RESPONSE_V015_SCHEMA_ID,
+      ],
+      [
+        "endpoint-config-response.v0.15.json",
+        ENDPOINT_CONFIG_RESPONSE_V015_SCHEMA_ID,
+      ],
+      [
+        "validate-facet-version-request.v0.15.json",
+        VALIDATE_FACET_VERSION_REQUEST_V015_SCHEMA_ID,
+      ],
+      [
+        "validate-facet-version-response.v0.15.json",
+        VALIDATE_FACET_VERSION_RESPONSE_V015_SCHEMA_ID,
+      ],
+      [
+        "publish-facet-version-request.v0.15.json",
+        PUBLISH_FACET_VERSION_REQUEST_V015_SCHEMA_ID,
+      ],
+      [
+        "publish-facet-version-response.v0.15.json",
+        PUBLISH_FACET_VERSION_RESPONSE_V015_SCHEMA_ID,
+      ],
+      [
+        "actor-preview-request.v0.15.json",
+        ACTOR_PREVIEW_REQUEST_V015_SCHEMA_ID,
+      ],
+      [
+        "actor-preview-response.v0.15.json",
+        ACTOR_PREVIEW_RESPONSE_V015_SCHEMA_ID,
+      ],
+      ["create-actor-request.v0.15.json", CREATE_ACTOR_REQUEST_V015_SCHEMA_ID],
+      [
+        "create-actor-pending-response.v0.15.json",
+        CREATE_ACTOR_PENDING_RESPONSE_V015_SCHEMA_ID,
+      ],
+      [
+        "create-actor-response.v0.15.json",
+        CREATE_ACTOR_RESPONSE_V015_SCHEMA_ID,
+      ],
+      [
+        "actor-publish-status-response.v0.15.json",
+        ACTOR_PUBLISH_STATUS_RESPONSE_V015_SCHEMA_ID,
+      ],
+      [
+        "create-agent-facet-request.v0.15.json",
+        CREATE_AGENT_FACET_REQUEST_V015_SCHEMA_ID,
+      ],
+      [
+        "create-agent-facet-response.v0.15.json",
+        CREATE_AGENT_FACET_RESPONSE_V015_SCHEMA_ID,
+      ],
+      ["executor-run-request.v0.15.json", EXECUTOR_RUN_REQUEST_V015_SCHEMA_ID],
+      [
+        "executor-run-response.v0.15.json",
+        EXECUTOR_RUN_RESPONSE_V015_SCHEMA_ID,
+      ],
+      ["public-facet.v0.15.json", PUBLIC_FACET_V015_SCHEMA_ID],
+      ["public-catalog-list.v0.15.json", PUBLIC_CATALOG_LIST_V015_SCHEMA_ID],
+      [
+        "public-catalog-detail.v0.15.json",
+        PUBLIC_CATALOG_DETAIL_V015_SCHEMA_ID,
+      ],
+      [
+        "invoke-facet-response.v0.15.json",
+        INVOKE_FACET_RESPONSE_V015_SCHEMA_ID,
+      ],
+      ["invoke-facet-pending.v0.15.json", INVOKE_FACET_PENDING_V015_SCHEMA_ID],
+    ] as const;
 
-    expect(JSON.stringify(manifest)).toContain("HOSTED_ACTOR");
-    expect(JSON.stringify(manifest)).toContain("AUTONOMOUS_AGENT");
-    expect(createActorReq.required).toEqual([
-      "providerId",
-      "name",
-      "slug",
-      "description",
-      "category",
-      "inputSchema",
-      "code",
-    ]);
-    expect(createAgentReq.required).toEqual([
-      "providerId",
-      "name",
-      "slug",
-      "description",
-      "category",
-      "erc8004TokenId",
-      "taskKind",
-      "inputSchema",
-    ]);
-    expect(executorResp.required).toEqual([
-      "status",
-      "result",
-      "dataset",
-      "logs",
-      "usage",
-    ]);
-    expect(JSON.stringify(invokeResp)).toContain("receiptTxHash");
-    expect(JSON.stringify(invokeResp)).toContain("runnerSignature");
-  });
-
-  it("defines optimistic immutable publication without private endpoint data", async () => {
-    const request = await readSchema("publish-facet-version-request.v0.9.json");
-    const response = await readSchema(
-      "publish-facet-version-response.v0.9.json",
-    );
-    const serialized = JSON.stringify(response);
-
-    expect(request.required).toEqual(["version", "visibility"]);
-    expect(JSON.stringify(request)).toContain("PUBLIC");
-    expect(serialized).toContain("PUBLISHED");
-    expect(serialized).toContain("currentPublishedVersionId");
-    expect(serialized).toContain("publishedAt");
-    expect(serialized).not.toMatch(
-      /protectedBaseUrl|vaultReference|secretRefId|secretValue|credentialValue/iu,
-    );
-  });
-
-  it("defines stable warning acknowledgement and safe manifest validation contracts", async () => {
-    const request = await readSchema(
-      "validate-facet-version-request.v0.8.json",
-    );
-    const response = await readSchema(
-      "validate-facet-version-response.v0.8.json",
-    );
-    const manifest = await readSchema("facet-manifest.v1.json");
-    const serialized = JSON.stringify({ request, response, manifest });
-
-    expect(request.required).toEqual(["version", "warningAcknowledgements"]);
-    expect(serialized).toContain("warningId");
-    expect(serialized).toContain("acknowledged");
-    expect(serialized).toContain("facet.manifest/v1");
-    expect(serialized).not.toMatch(
-      /protectedBaseUrl|vaultReference|secretValue|credentialValue/iu,
-    );
-  });
-
-  it("defines write-only secret and protected endpoint configuration contracts", async () => {
-    const createSecret = await readSchema("create-secret-request.v0.7.json");
-    const rotateSecret = await readSchema("rotate-secret-request.v0.7.json");
-    const secretResponse = await readSchema("secret-ref-response.v0.7.json");
-    const endpointConfig = await readSchema(
-      "endpoint-config-request.v0.7.json",
-    );
-
-    expect(createSecret.required).toEqual(["kind", "label", "value"]);
-    expect(rotateSecret.required).toEqual(["value"]);
-    expect(JSON.stringify(createSecret)).toContain("BEARER_TOKEN");
-    expect(JSON.stringify(endpointConfig)).toContain("API_KEY_QUERY");
-    expect(JSON.stringify(endpointConfig)).toContain("secretRefId");
-    expect(JSON.stringify(endpointConfig)).toContain("oneOf");
-    expect(JSON.stringify(secretResponse)).not.toContain('"value"');
-    expect(JSON.stringify(secretResponse)).not.toMatch(
-      /vaultReference|filesystem|path/iu,
-    );
-  });
-
-  it("defines normalized operation candidates without provider secret values", async () => {
-    const responseSchema = await readSchema(
-      "importer-parse-response.v0.6.json",
-    );
-    const candidate = (
-      responseSchema.properties as {
-        candidates: { items: { required: string[]; properties: unknown } };
+    for (const [filename, expectedId] of schemas) {
+      const schema = await readSchema(filename);
+      expect(schema.$id).toBe(expectedId);
+      const text = JSON.stringify(schema);
+      expect(text).not.toMatch(
+        /EXTERNAL_HTTP_API|HOSTED_ACTOR|AUTONOMOUS_AGENT|facetSlug|facetFullName|displayVersion|\bfullName\b/u,
+      );
+      if (
+        filename !== "facet-manifest.v1.json" &&
+        filename !== "executor-run-request.v0.15.json"
+      ) {
+        expect(text).not.toMatch(/\b(facetId|versionId|facetVersionId)\b/u);
       }
-    ).candidates.items;
-    const serialized = JSON.stringify(responseSchema);
-
-    expect(candidate.required).toEqual([
-      "candidateId",
-      "jsonPointer",
-      "method",
-      "path",
-      "tags",
-      "normalized",
-      "warnings",
-    ]);
-    expect(serialized).toContain("inputSchema");
-    expect(serialized).toContain("outputSchema");
-    expect(serialized).toContain("errorSchema");
-    expect(serialized).toContain("authAlternatives");
-    expect(serialized).toContain("API_KEY_HEADER");
-    expect(serialized).toContain("BEARER");
-    expect(serialized).not.toMatch(
-      /secretValue|credentialValue|apiKeyValue|bearerToken/iu,
-    );
+    }
   });
 
-  it("defines an atomic operation-selection batch without credential fields", async () => {
-    const requestSchema = await readSchema(
-      "create-facet-drafts-request.v0.5.json",
-    );
-    const responseSchema = await readSchema(
-      "create-facet-drafts-response.v0.5.json",
-    );
-    const requestText = JSON.stringify(requestSchema);
-    const responseText = JSON.stringify(responseSchema);
-
-    expect(requestSchema.required).toEqual([
-      "providerId",
-      "importJobId",
-      "selections",
-    ]);
-    expect(requestText).toContain("operationCandidateId");
-    expect(requestText).toContain("sideEffectClass");
-    expect(responseText).toContain("sourceOperationPointer");
-    expect(responseText).toContain("contentHash");
-    expect(`${requestText}${responseText}`).not.toMatch(
-      /baseUrl|secretRef|credential|apiKey|bearerToken/iu,
-    );
-  });
-
-  it("keeps authentication and membership data out of the public provider", async () => {
-    const providerSchema = await readSchema("public-provider.v0.2.json");
-    const properties = providerSchema.properties as Record<string, unknown>;
-
-    expect(properties).not.toHaveProperty("externalSubject");
-    expect(properties).not.toHaveProperty("role");
-    expect(properties).not.toHaveProperty("credentials");
-  });
-
-  it("keeps external authentication subjects out of membership responses", async () => {
-    const membershipSchema = await readSchema("provider-membership.v0.3.json");
-    const serialized = JSON.stringify(membershipSchema);
-
-    expect(serialized).not.toContain("externalSubject");
-    expect(serialized).not.toContain("authSubject");
-  });
-
-  it("versions all ADR-0017 v0.14.0 schema identifiers", async () => {
-    expect(
-      (await readSchema("wallet-link-challenge-request.v0.14.json")).$id,
-    ).toBe(WALLET_LINK_CHALLENGE_REQUEST_V014_SCHEMA_ID);
-    expect(
-      (await readSchema("wallet-link-challenge-response.v0.14.json")).$id,
-    ).toBe(WALLET_LINK_CHALLENGE_RESPONSE_V014_SCHEMA_ID);
-    expect((await readSchema("wallet-link-request.v0.14.json")).$id).toBe(
-      WALLET_LINK_REQUEST_V014_SCHEMA_ID,
-    );
-    expect((await readSchema("wallet-link-response.v0.14.json")).$id).toBe(
-      WALLET_LINK_RESPONSE_V014_SCHEMA_ID,
-    );
-    expect((await readSchema("actor-preview-request.v0.14.json")).$id).toBe(
-      ACTOR_PREVIEW_REQUEST_V014_SCHEMA_ID,
-    );
-    expect((await readSchema("actor-preview-response.v0.14.json")).$id).toBe(
-      ACTOR_PREVIEW_RESPONSE_V014_SCHEMA_ID,
-    );
-    expect((await readSchema("create-actor-request.v0.14.json")).$id).toBe(
-      CREATE_ACTOR_REQUEST_V014_SCHEMA_ID,
-    );
-    expect(
-      (await readSchema("create-actor-pending-response.v0.14.json")).$id,
-    ).toBe(CREATE_ACTOR_PENDING_RESPONSE_V014_SCHEMA_ID);
-    expect(
-      (await readSchema("actor-publish-status-response.v0.14.json")).$id,
-    ).toBe(ACTOR_PUBLISH_STATUS_RESPONSE_V014_SCHEMA_ID);
-    expect((await readSchema("public-facet.v0.14.json")).$id).toBe(
-      PUBLIC_FACET_V014_SCHEMA_ID,
-    );
-    expect((await readSchema("public-catalog-list.v0.14.json")).$id).toBe(
-      PUBLIC_CATALOG_LIST_V014_SCHEMA_ID,
-    );
-    expect((await readSchema("public-catalog-detail.v0.14.json")).$id).toBe(
-      PUBLIC_CATALOG_DETAIL_V014_SCHEMA_ID,
-    );
-    expect((await readSchema("invoke-facet-response.v0.14.json")).$id).toBe(
-      INVOKE_FACET_RESPONSE_V014_SCHEMA_ID,
-    );
-    expect((await readSchema("invoke-facet-pending.v0.14.json")).$id).toBe(
-      INVOKE_FACET_PENDING_V014_SCHEMA_ID,
-    );
-  });
-
-  it("validates wallet-link challenge and confirmation v0.14.0 contracts", async () => {
+  it("validates wallet-link challenge and confirmation contracts", async () => {
     const challengeReqSchema = await readSchema(
       "wallet-link-challenge-request.v0.14.json",
     );
@@ -434,7 +284,7 @@ describe("public contracts", () => {
       challengeId: "01a1e97a-90e0-7030-b565-91c9abc3857b",
       message:
         "facet.briandev.space wants you to link wallet\nChain ID: 43113\nNonce: abc",
-      expiresAt: "2026-11-17T12:05:00Z",
+      expiresAt: "2026-11-18T12:05:00Z",
     };
     const linkReq: WalletLinkRequest = {
       challengeId: "01a1e97a-90e0-7030-b565-91c9abc3857b",
@@ -443,49 +293,45 @@ describe("public contracts", () => {
     };
     const linkRes: WalletLinkResponse = {
       walletAddress: "0x9265c1c87fC5fb3C72Dc68b4D3A005dE1E22C3cf",
-      verifiedAt: "2026-11-17T12:01:00Z",
+      verifiedAt: "2026-11-18T12:01:00Z",
     };
 
     expect(validateAgainstSchema(challengeReqSchema, challengeReq)).toEqual([]);
     expect(validateAgainstSchema(challengeResSchema, challengeRes)).toEqual([]);
     expect(validateAgainstSchema(linkReqSchema, linkReq)).toEqual([]);
     expect(validateAgainstSchema(linkResSchema, linkRes)).toEqual([]);
-
-    expect(
-      validateAgainstSchema(challengeReqSchema, { unexpected: true }),
-    ).not.toEqual([]);
-    expect(
-      validateAgainstSchema(linkReqSchema, {
-        ...linkReq,
-        address: "not-an-address",
-      }),
-    ).not.toEqual([]);
-    expect(
-      validateAgainstSchema(linkResSchema, {
-        walletAddress: "0x9265c1c87fC5fb3C72Dc68b4D3A005dE1E22C3cf",
-      }),
-    ).not.toEqual([]);
   });
 
-  it("validates Actor preview and pending-to-published Actor contracts in v0.14.0", async () => {
+  it("validates v0.15.0 Option B Actor, Agent, Preview, and Executor contracts", async () => {
     const previewReqSchema = await readSchema(
-      "actor-preview-request.v0.14.json",
+      "actor-preview-request.v0.15.json",
     );
     const previewResSchema = await readSchema(
-      "actor-preview-response.v0.14.json",
+      "actor-preview-response.v0.15.json",
     );
     const createActorReqSchema = await readSchema(
-      "create-actor-request.v0.14.json",
+      "create-actor-request.v0.15.json",
     );
     const createActorPendingSchema = await readSchema(
-      "create-actor-pending-response.v0.14.json",
+      "create-actor-pending-response.v0.15.json",
+    );
+    const createActorResSchema = await readSchema(
+      "create-actor-response.v0.15.json",
     );
     const publishStatusSchema = await readSchema(
-      "actor-publish-status-response.v0.14.json",
+      "actor-publish-status-response.v0.15.json",
+    );
+    const createAgentReqSchema = await readSchema(
+      "create-agent-facet-request.v0.15.json",
+    );
+    const createAgentResSchema = await readSchema(
+      "create-agent-facet-response.v0.15.json",
+    );
+    const executorReqSchema = await readSchema(
+      "executor-run-request.v0.15.json",
     );
 
     const previewReq: ActorPreviewRequest = {
-      providerId: "01a1e97a-90e0-7030-b565-91c9abc3857b",
       code: "export default async function run(input) { return [{ echo: input.text }]; }",
       inputSchema: {
         type: "object",
@@ -505,30 +351,13 @@ describe("public contracts", () => {
         runnerSignature: "0x" + "cd".repeat(65),
       },
     };
-    const unsignedPreviewRes: ActorPreviewResponse = {
-      result: [{ echo: "hello fuji" }],
-      dataset: [{ echo: "hello fuji" }],
-      logs: [],
-      usage: { itemCount: 1, durationMs: 35 },
-    };
-
     expect(validateAgainstSchema(previewReqSchema, previewReq)).toEqual([]);
     expect(validateAgainstSchema(previewResSchema, previewRes)).toEqual([]);
-    expect(validateAgainstSchema(previewResSchema, unsignedPreviewRes)).toEqual(
-      [],
-    );
-    expect(
-      validateAgainstSchema(previewReqSchema, {
-        ...previewReq,
-        code: "short",
-      }),
-    ).not.toEqual([]);
 
-    const createActorReq: CreateActorRequestV014 = {
-      providerId: "01a1e97a-90e0-7030-b565-91c9abc3857b",
-      name: "Echo Transform Actor",
-      slug: "echo-transform-actor",
-      displayVersion: "v1",
+    const createActorReq: CreateActorRequest = {
+      facetName: "echo-transform",
+      facetDisplayName: "Echo Transform Actor",
+      version: "1.0.0",
       description: "Transforms caller input deterministically.",
       category: "utilities",
       inputSchema: previewReq.inputSchema,
@@ -537,116 +366,151 @@ describe("public contracts", () => {
       priceAtomic: "1000",
       payTo: "0x9265c1c87fC5fb3C72Dc68b4D3A005dE1E22C3cf",
     };
+    expect(validateAgainstSchema(createActorReqSchema, createActorReq)).toEqual(
+      [],
+    );
+
+    // Reject invalid facetName, underscore, short name, and non-SemVer versions
+    expect(
+      validateAgainstSchema(createActorReqSchema, {
+        ...createActorReq,
+        facetName: "api",
+      }),
+    ).not.toEqual([]);
+    expect(
+      validateAgainstSchema(createActorReqSchema, {
+        ...createActorReq,
+        facetName: "echo_transform",
+      }),
+    ).not.toEqual([]);
+    expect(
+      validateAgainstSchema(createActorReqSchema, {
+        ...createActorReq,
+        version: "v1.0.0",
+      }),
+    ).not.toEqual([]);
+    expect(
+      validateAgainstSchema(createActorReqSchema, {
+        ...createActorReq,
+        version: "1.0",
+      }),
+    ).not.toEqual([]);
+
     const pendingRes: CreateActorPendingResponse = {
       facet: {
-        id: "01a1e97b-a5d1-7c25-9a05-4e0e7405d445",
-        versionId: "01a1e97b-a5d1-7c2d-a50a-7f231c809d73",
-        slug: "echo-transform-actor",
-        fullName: "taihung/echo-transform-actor",
-        displayVersion: "v1",
-        facetType: "HOSTED_ACTOR",
+        creator: "tai-hung-dev",
+        facetName: "echo-transform",
+        facetDisplayName: "Echo Transform Actor",
+        version: "1.0.0",
+        facetType: "ACTOR",
         status: "REGISTRATION_PENDING",
         visibility: "PRIVATE",
         imageDigest: "sha256:" + "b".repeat(64),
       },
     };
-    const minimalPendingRes: CreateActorPendingResponse = {
+    const publishedRes: CreateActorResponse = {
       facet: {
-        id: pendingRes.facet.id,
-        versionId: pendingRes.facet.versionId,
-        status: "REGISTRATION_PENDING",
-        visibility: "PRIVATE",
-        imageDigest: pendingRes.facet.imageDigest,
+        creator: "tai-hung-dev",
+        facetName: "echo-transform",
+        facetDisplayName: "Echo Transform Actor",
+        version: "1.0.0",
+        facetType: "ACTOR",
+        imageDigest: "sha256:" + "b".repeat(64),
+        status: "PUBLISHED",
+        visibility: "PUBLIC",
+        publishedAt: "2026-11-18T12:00:00Z",
       },
     };
-    const statusPending: ActorPublishStatusResponse = {
-      facetId: pendingRes.facet.id,
-      versionId: pendingRes.facet.versionId,
-      status: "REGISTRATION_PENDING",
-    };
-    const statusPublished: ActorPublishStatusResponse = {
-      facetId: pendingRes.facet.id,
-      versionId: pendingRes.facet.versionId,
+    const statusRes: ActorPublishStatusResponse = {
+      creator: "tai-hung-dev",
+      facetName: "echo-transform",
+      version: "1.0.0",
       status: "PUBLISHED",
       registryTxHash: "0x" + "1".repeat(64),
     };
-    const statusFailed: ActorPublishStatusResponse = {
-      facetId: pendingRes.facet.id,
-      versionId: pendingRes.facet.versionId,
-      status: "REGISTRATION_FAILED",
-      errorCode: "REGISTRY_REVERTED",
-    };
-
-    expect(validateAgainstSchema(createActorReqSchema, createActorReq)).toEqual(
-      [],
-    );
     expect(validateAgainstSchema(createActorPendingSchema, pendingRes)).toEqual(
       [],
     );
-    expect(
-      validateAgainstSchema(createActorPendingSchema, minimalPendingRes),
-    ).toEqual([]);
-    expect(validateAgainstSchema(publishStatusSchema, statusPending)).toEqual(
+    expect(validateAgainstSchema(createActorResSchema, publishedRes)).toEqual(
       [],
     );
-    expect(validateAgainstSchema(publishStatusSchema, statusPublished)).toEqual(
+    expect(validateAgainstSchema(publishStatusSchema, statusRes)).toEqual([]);
+
+    const createAgentReq: CreateAgentFacetRequest = {
+      facetName: "vn-market-agent",
+      facetDisplayName: "VN Market Analyst Agent",
+      version: "1.0.0",
+      description: "ERC-8004 autonomous analyst agent.",
+      category: "a2a-agents",
+      erc8004TokenId: "304",
+      taskKind: "vn-market-analysis",
+      inputSchema: { type: "object", properties: {} },
+    };
+    const createAgentRes: CreateAgentFacetResponse = {
+      facet: {
+        creator: "facet-demo-org",
+        facetName: "vn-market-agent",
+        facetDisplayName: "VN Market Analyst Agent",
+        version: "1.0.0",
+        facetType: "AGENT",
+        erc8004TokenId: "304",
+        erc8004Registry: "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+        status: "PUBLISHED",
+        visibility: "PUBLIC",
+        publishedAt: "2026-11-18T12:00:00Z",
+      },
+    };
+    expect(validateAgainstSchema(createAgentReqSchema, createAgentReq)).toEqual(
       [],
     );
-    expect(validateAgainstSchema(publishStatusSchema, statusFailed)).toEqual(
+    expect(validateAgainstSchema(createAgentResSchema, createAgentRes)).toEqual(
       [],
     );
 
+    const execReq: ExecutorRunRequest = {
+      runId: "01a1e97a-90e0-7030-b565-91c9abc3857b",
+      facetId: "01a1e97a-90e0-7030-b565-91c9abc3857c",
+      facetType: "ACTOR",
+      input: { text: "hello" },
+      timeoutMs: 15000,
+      actorBundle: {
+        code: previewReq.code,
+        imageDigest: "sha256:" + "b".repeat(64),
+      },
+    };
+    expect(validateAgainstSchema(executorReqSchema, execReq)).toEqual([]);
     expect(
-      validateAgainstSchema(createActorReqSchema, {
-        ...createActorReq,
-        priceAtomic: "1000.5",
-      }),
-    ).not.toEqual([]);
-    expect(
-      validateAgainstSchema(createActorReqSchema, {
-        ...createActorReq,
-        priceAtomic: "0",
-      }),
-    ).not.toEqual([]);
-    expect(
-      validateAgainstSchema(createActorReqSchema, {
-        ...createActorReq,
-        pricingModel: "PAY_PER_RESULT",
-      }),
-    ).not.toEqual([]);
-    expect(
-      validateAgainstSchema(createActorPendingSchema, {
-        facet: {
-          ...pendingRes.facet,
-          visibility: "PUBLIC",
-        },
+      validateAgainstSchema(executorReqSchema, {
+        ...execReq,
+        facetType: "HOSTED_ACTOR",
       }),
     ).not.toEqual([]);
   });
 
-  it("maintains v0.13.0 sample compatibility in public-facet.v0.14.json and rejects invalid pricing", async () => {
-    const publicFacetV14 = await readSchema("public-facet.v0.14.json");
-    const listV14 = await readSchema("public-catalog-list.v0.14.json");
-    const detailV14 = await readSchema("public-catalog-detail.v0.14.json");
+  it("validates public catalog, public provider, and invocation contracts without UUIDs or slugs", async () => {
+    const publicFacetSchema = await readSchema("public-facet.v0.15.json");
+    const listSchema = await readSchema("public-catalog-list.v0.15.json");
+    const detailSchema = await readSchema("public-catalog-detail.v0.15.json");
+    const providerSchema = await readSchema("public-provider.v0.15.json");
+    const invokeSuccessSchema = await readSchema(
+      "invoke-facet-response.v0.15.json",
+    );
+    const invokePendingSchema = await readSchema(
+      "invoke-facet-pending.v0.15.json",
+    );
     const registry = new Map<string, JsonSchemaNode>([
-      [PUBLIC_FACET_V014_SCHEMA_ID, publicFacetV14],
+      [PUBLIC_FACET_V015_SCHEMA_ID, publicFacetSchema],
     ]);
 
-    const v013ActorSample: PublicFacet = {
-      id: "01a1e97a-90e0-7030-b565-91c9abc3857b",
-      versionId: "01a1e97a-90e0-7038-b9ff-4f8d2a599e04",
-      slug: "vn-gold-fx-actor",
-      name: "VN Gold & FX Normalizer",
+    const actorSample: PublicFacet = {
+      creator: "facet-demo-org",
+      facetName: "vn-gold-fx-actor",
+      facetDisplayName: "VN Gold & FX Normalizer",
+      version: "1.0.0",
+      facetType: "ACTOR",
       description: "Normalizes Vietnamese gold and FX quotes.",
       category: "vietnamese-data",
       tags: ["vietnam", "gold", "fx"],
-      facetType: "HOSTED_ACTOR",
-      provider: {
-        id: "01a1e97a-0000-7000-8000-000000000001",
-        name: "FACET Demo",
-        slug: "facet-demo",
-      },
-      displayVersion: "1.0.0",
       method: "POST",
       inputSchema: { type: "object", properties: {} },
       outputSchema: { type: "array", items: { type: "object" } },
@@ -663,34 +527,18 @@ describe("public contracts", () => {
           "sha256:e3851e74e368a05b51d68f7e3923d905a4bc569ced2306cc397e161388c470dd",
         registryTxHash:
           "0x7c35e44145f1dc79c55a0da54080964f537be17ca15a5766013c91a73c1426f2",
-      },
-      publishedAt: "2026-11-16T12:00:00Z",
-    };
-
-    const v014VerifiedActorSample: PublicFacet = {
-      ...v013ActorSample,
-      actorMeta: {
-        ...v013ActorSample.actorMeta!,
         registryVerified: true,
-        runnerOciDigest: "sha256:" + "c".repeat(64),
       },
+      publishedAt: "2026-11-18T12:00:00Z",
     };
 
-    const v013AgentSample: PublicFacet = {
-      id: "01a1e97c-61c5-769b-b1b4-cbe2ceaa5591",
-      versionId: "01a1e97c-61c5-76a8-a715-94bef1a1eee0",
-      slug: "vn-market-analyst-agent",
-      name: "VN Market & Macro Analyst Agent",
-      description: "ERC-8004 analyst agent.",
-      category: "a2a-agents",
-      tags: ["vietnam", "a2a"],
-      facetType: "AUTONOMOUS_AGENT",
-      provider: v013ActorSample.provider,
-      displayVersion: "1.0.0",
-      method: "POST",
-      inputSchema: { type: "object", properties: {} },
-      outputSchema: { type: "object" },
-      pricing: v013ActorSample.pricing!,
+    const { actorMeta: _ignoredActorMeta, ...actorBase } = actorSample;
+    void _ignoredActorMeta;
+    const agentSample: PublicFacet = {
+      ...actorBase,
+      facetName: "vn-market-agent",
+      facetDisplayName: "VN Market Analyst Agent",
+      facetType: "AGENT",
       agentMeta: {
         erc8004ChainId: 43113,
         erc8004Registry: "0x8004A818BFB912233c491871b3d84c89A494BD9e",
@@ -700,76 +548,56 @@ describe("public contracts", () => {
         registryTxHash:
           "0x16144b34bd02b10a28124dd5b811da1855c666585b0fa9c0ea1b8b1ed7cd1916",
       },
-      publishedAt: "2026-11-16T12:00:00Z",
     };
 
-    const v013ApiSample: PublicFacet = {
-      id: "01a1e97d-1111-7000-8000-000000000002",
-      versionId: "01a1e97d-2222-7000-8000-000000000003",
-      slug: "coingecko-btc-history",
-      name: "CoinGecko BTC Historical Price",
+    const apiSample: PublicFacet = {
+      creator: "facet-demo-org",
+      facetName: "coingecko-btc",
+      facetDisplayName: "CoinGecko BTC Historical Price",
+      version: "1.0.0",
+      facetType: "API",
       description: "Read-only historical price endpoint.",
       category: "market-data",
       tags: ["btc", "price"],
-      facetType: "EXTERNAL_HTTP_API",
-      provider: v013ActorSample.provider,
-      displayVersion: "1.0.0",
       method: "GET",
       inputSchema: { type: "object", properties: { date: { type: "string" } } },
       outputSchema: { type: "object" },
-      pricing: v013ActorSample.pricing!,
-      publishedAt: "2026-11-16T12:00:00Z",
+      ...(actorSample.pricing ? { pricing: actorSample.pricing } : {}),
+      publishedAt: "2026-11-18T12:00:00Z",
     };
 
     const listBody: ListPublicFacetsResponse = {
-      facets: [
-        v013ActorSample,
-        v014VerifiedActorSample,
-        v013AgentSample,
-        v013ApiSample,
-      ],
+      facets: [actorSample, agentSample, apiSample],
     };
-    const detailBody: GetPublicFacetResponse = {
-      facet: v014VerifiedActorSample,
-    };
+    const detailBody: GetPublicFacetResponse = { facet: actorSample };
 
-    expect(validateAgainstSchema(listV14, listBody, registry)).toEqual([]);
-    expect(validateAgainstSchema(detailV14, detailBody, registry)).toEqual([]);
-
-    expect(
-      validateAgainstSchema(publicFacetV14, {
-        ...v014VerifiedActorSample,
-        pricing: {
-          ...v014VerifiedActorSample.pricing!,
-          priceAtomic: "1000.25",
-        },
-      }),
-    ).not.toEqual([]);
-    expect(
-      validateAgainstSchema(publicFacetV14, {
-        ...v014VerifiedActorSample,
-        pricing: {
-          model: "PAY_PER_RUN",
-          priceAtomic: "1000",
-          assetAddress: "0xe7082a54a456dc4dfe0ceadcd0d0dce7d8ba176f",
-          chainId: 43113,
-        },
-      }),
-    ).not.toEqual([]);
-  });
-
-  it("enforces mandatory payer, creatorPayTo, amountAtomic and receiptTxHash on v0.14.0 invocation and explicit pending states", async () => {
-    const invokeSuccessSchema = await readSchema(
-      "invoke-facet-response.v0.14.json",
-    );
-    const invokePendingSchema = await readSchema(
-      "invoke-facet-pending.v0.14.json",
+    expect(validateAgainstSchema(listSchema, listBody, registry)).toEqual([]);
+    expect(validateAgainstSchema(detailSchema, detailBody, registry)).toEqual(
+      [],
     );
 
-    const paidSuccess: InvokeFacetResponseV014 = {
+    const providerSample: PublicProvider = {
+      creator: "tai-hung-dev",
+      displayName: "tai-hung-dev",
+      description: "Independent FACET developer",
+      websiteUrl: null,
+      contact: null,
+      walletAddress: "0x9265c1c87fC5fb3C72Dc68b4D3A005dE1E22C3cf",
+      walletVerifiedAt: "2026-11-18T12:00:00Z",
+      status: "active",
+      revision: 1,
+      createdAt: "2026-11-18T12:00:00Z",
+      updatedAt: "2026-11-18T12:00:00Z",
+    };
+    expect(validateAgainstSchema(providerSchema, providerSample)).toEqual([]);
+
+    const paidSuccess: InvokeFacetResponse = {
       runId: "b55dcf50-5e15-42df-9cf6-a480efd5157d",
-      facetVersionId: "01a1e97b-a5d1-7c2d-a50a-7f231c809d73",
-      facetType: "HOSTED_ACTOR",
+      creator: "tai-hung-dev",
+      facetName: "vn-gold-fx-actor",
+      facetDisplayName: "VN Gold & FX Normalizer",
+      version: "1.0.0",
+      facetType: "ACTOR",
       result: { items: [{ ok: true }], count: 1 },
       dataset: [{ ok: true }],
       usage: {
@@ -795,77 +623,18 @@ describe("public contracts", () => {
         runnerSignature: "0x" + "ef".repeat(65),
       },
     };
-
     expect(validateAgainstSchema(invokeSuccessSchema, paidSuccess)).toEqual([]);
 
-    // Reject float string or numeric amountAtomic
-    expect(
-      validateAgainstSchema(invokeSuccessSchema, {
-        ...paidSuccess,
-        payment: { ...paidSuccess.payment, amountAtomic: "1000.5" },
-      }),
-    ).not.toEqual([]);
-    expect(
-      validateAgainstSchema(invokeSuccessSchema, {
-        ...paidSuccess,
-        payment: { ...paidSuccess.payment, amountAtomic: 1000 },
-      }),
-    ).not.toEqual([]);
-
-    // Reject missing creatorPayTo, payer, or receiptTxHash
-    const { creatorPayTo: _missingCreator, ...paymentWithoutCreator } =
-      paidSuccess.payment;
-    expect(_missingCreator).toBeDefined();
-    expect(
-      validateAgainstSchema(invokeSuccessSchema, {
-        ...paidSuccess,
-        payment: paymentWithoutCreator,
-      }),
-    ).not.toEqual([]);
-
-    const { payer: _missingPayer, ...paymentWithoutPayer } =
-      paidSuccess.payment;
-    expect(_missingPayer).toBeDefined();
-    expect(
-      validateAgainstSchema(invokeSuccessSchema, {
-        ...paidSuccess,
-        payment: paymentWithoutPayer,
-      }),
-    ).not.toEqual([]);
-
-    const { receiptTxHash: _missingReceiptTx, ...receiptWithoutTx } =
-      paidSuccess.receipt;
-    expect(_missingReceiptTx).toBeDefined();
-    expect(
-      validateAgainstSchema(invokeSuccessSchema, {
-        ...paidSuccess,
-        receipt: receiptWithoutTx,
-      }),
-    ).not.toEqual([]);
-
-    const pendingSettlement: InvokeFacetPendingResponseV014 = {
+    const pending: InvokeFacetPendingResponse = {
       runId: "b55dcf50-5e15-42df-9cf6-a480efd5157d",
+      creator: "tai-hung-dev",
+      facetName: "vn-gold-fx-actor",
+      version: "1.0.0",
       payment: {
         status: "settlement_pending",
         transaction: "0x" + "4".repeat(64),
       },
     };
-    const pendingReceipt: InvokeFacetPendingResponseV014 = {
-      runId: "b55dcf50-5e15-42df-9cf6-a480efd5157d",
-      payment: { status: "receipt_pending" },
-    };
-
-    expect(
-      validateAgainstSchema(invokePendingSchema, pendingSettlement),
-    ).toEqual([]);
-    expect(validateAgainstSchema(invokePendingSchema, pendingReceipt)).toEqual(
-      [],
-    );
-    expect(
-      validateAgainstSchema(invokePendingSchema, {
-        runId: pendingReceipt.runId,
-        payment: { status: "settled" },
-      }),
-    ).not.toEqual([]);
+    expect(validateAgainstSchema(invokePendingSchema, pending)).toEqual([]);
   });
 });

@@ -1,34 +1,32 @@
 import type {
-  AutonomousAgentMetadata,
+  ActorFacetMetadata,
+  AgentFacetMetadata,
   FacetPricing,
   FacetType,
-  HostedActorMetadata,
 } from "./actor-and-agent.js";
 
 export interface PublicFacet {
-  id: string;
-  versionId: string;
-  slug: string;
-  fullName?: string;
-  name: string;
+  creator: string;
+  facetName: string;
+  facetDisplayName: string;
+  version: string;
+  facetType: FacetType;
   description: string;
   category: string;
   tags: string[];
-  facetType?: FacetType;
-  provider: { id: string; name: string; slug: string };
-  displayVersion: string;
   method: string;
   inputSchema: unknown;
   outputSchema: unknown;
   pricing?: FacetPricing;
-  actorMeta?: HostedActorMetadata;
-  agentMeta?: AutonomousAgentMetadata;
+  actorMeta?: ActorFacetMetadata;
+  agentMeta?: AgentFacetMetadata;
   publishedAt: string;
 }
 
 export interface ListPublicFacetsResponse {
   facets: PublicFacet[];
 }
+
 export interface GetPublicFacetResponse {
   facet: PublicFacet;
 }

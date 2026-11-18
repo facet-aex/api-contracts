@@ -1,8 +1,4 @@
-export const FACET_TYPES = [
-  "EXTERNAL_HTTP_API",
-  "HOSTED_ACTOR",
-  "AUTONOMOUS_AGENT",
-] as const;
+export const FACET_TYPES = ["API", "ACTOR", "AGENT"] as const;
 export type FacetType = (typeof FACET_TYPES)[number];
 
 export const PRICING_MODELS = ["PAY_PER_RUN", "PAY_PER_RESULT"] as const;
@@ -16,7 +12,7 @@ export interface FacetPricing {
   payTo: string;
 }
 
-export interface HostedActorMetadata {
+export interface ActorFacetMetadata {
   runtime: string;
   imageDigest: string;
   runnerOciDigest?: string;
@@ -24,7 +20,7 @@ export interface HostedActorMetadata {
   registryVerified?: boolean;
 }
 
-export interface AutonomousAgentMetadata {
+export interface AgentFacetMetadata {
   erc8004ChainId: 43113;
   erc8004Registry: string;
   erc8004TokenId: string;
@@ -34,10 +30,9 @@ export interface AutonomousAgentMetadata {
 }
 
 export interface CreateActorRequest {
-  providerId: string;
-  name: string;
-  slug: string;
-  displayVersion?: string;
+  facetName: string;
+  facetDisplayName: string;
+  version?: string;
   summary?: string;
   description: string;
   category: string;
@@ -45,18 +40,32 @@ export interface CreateActorRequest {
   inputSchema: Record<string, unknown>;
   outputSchema?: Record<string, unknown>;
   code: string;
-  pricingModel?: PricingModel;
+  pricingModel?: "PAY_PER_RUN";
   priceAtomic?: string;
   payTo?: string;
   registryTxHash?: string;
 }
 
+export interface CreateActorPendingResponse {
+  facet: {
+    creator: string;
+    facetName: string;
+    facetDisplayName: string;
+    version: string;
+    facetType: "ACTOR";
+    status: "REGISTRATION_PENDING";
+    visibility: "PRIVATE";
+    imageDigest: string;
+  };
+}
+
 export interface CreateActorResponse {
   facet: {
-    id: string;
-    versionId: string;
-    slug: string;
-    facetType: "HOSTED_ACTOR";
+    creator: string;
+    facetName: string;
+    facetDisplayName: string;
+    version: string;
+    facetType: "ACTOR";
     imageDigest: string;
     status: "PUBLISHED";
     visibility: "PUBLIC";
@@ -64,11 +73,22 @@ export interface CreateActorResponse {
   };
 }
 
+export type ActorPublishStatus =
+  "REGISTRATION_PENDING" | "PUBLISHED" | "REGISTRATION_FAILED";
+
+export interface ActorPublishStatusResponse {
+  creator: string;
+  facetName: string;
+  version: string;
+  status: ActorPublishStatus;
+  registryTxHash?: string;
+  errorCode?: string;
+}
+
 export interface CreateAgentFacetRequest {
-  providerId: string;
-  name: string;
-  slug: string;
-  displayVersion?: string;
+  facetName: string;
+  facetDisplayName: string;
+  version?: string;
   summary?: string;
   description: string;
   category: string;
@@ -87,10 +107,11 @@ export interface CreateAgentFacetRequest {
 
 export interface CreateAgentFacetResponse {
   facet: {
-    id: string;
-    versionId: string;
-    slug: string;
-    facetType: "AUTONOMOUS_AGENT";
+    creator: string;
+    facetName: string;
+    facetDisplayName: string;
+    version: string;
+    facetType: "AGENT";
     erc8004TokenId: string;
     erc8004Registry: string;
     status: "PUBLISHED";
@@ -106,11 +127,14 @@ export interface ExecutorRunUsage {
   runnerSignature: string;
 }
 
+/**
+ * Internal gateway-to-executor payload (keeps internal DB UUIDs for on-chain
+ * EIP-191 usage signing, never exposed to public API or agent callers).
+ */
 export interface ExecutorRunRequest {
   runId: string;
   facetId: string;
-  facetVersionId: string;
-  facetType: "HOSTED_ACTOR" | "AUTONOMOUS_AGENT";
+  facetType: "ACTOR" | "AGENT";
   input: Record<string, unknown>;
   timeoutMs: number;
   actorBundle?: {
@@ -135,7 +159,6 @@ export interface ExecutorRunResponse {
 }
 
 export interface ActorPreviewRequest {
-  providerId: string;
   code: string;
   inputSchema: Record<string, unknown>;
   input: Record<string, unknown>;
@@ -153,49 +176,4 @@ export interface ActorPreviewResponse {
   dataset: Record<string, unknown>[];
   logs: string[];
   usage: ActorPreviewUsage;
-}
-
-export interface CreateActorRequestV014 {
-  id?: string;
-  providerId: string;
-  name: string;
-  slug: string;
-  displayVersion?: string;
-  summary?: string;
-  description: string;
-  category: string;
-  tags?: string[];
-  inputSchema: Record<string, unknown>;
-  outputSchema?: Record<string, unknown>;
-  code: string;
-  pricingModel?: "PAY_PER_RUN";
-  priceAtomic?: string;
-  payTo?: string;
-}
-
-export interface CreateActorPendingResponse {
-  facet: {
-    id: string;
-    versionId: string;
-    slug?: string;
-    fullName?: string;
-    displayVersion?: string;
-    facetType?: "HOSTED_ACTOR";
-    status: "REGISTRATION_PENDING";
-    visibility: "PRIVATE";
-    imageDigest: string;
-  };
-}
-
-export type ActorPublishStatus =
-  "REGISTRATION_PENDING" | "PUBLISHED" | "REGISTRATION_FAILED";
-
-export interface ActorPublishStatusResponse {
-  facetId: string;
-  versionId: string;
-  fullName?: string;
-  displayVersion?: string;
-  status: ActorPublishStatus;
-  registryTxHash?: string;
-  errorCode?: string;
 }

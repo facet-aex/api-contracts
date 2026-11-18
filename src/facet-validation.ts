@@ -4,7 +4,7 @@ export interface WarningAcknowledgementInput {
 }
 
 export interface ValidateFacetVersionRequest {
-  version: number;
+  revision: number;
   warningAcknowledgements: WarningAcknowledgementInput[];
 }
 
@@ -28,9 +28,9 @@ export interface WarningAcknowledgement {
 
 export interface ValidateFacetVersionResponse {
   facetVersion: {
-    id: string;
+    version: string;
     status: "DRAFT" | "VALID";
-    version: number;
+    revision: number;
     validation: {
       status: "INVALID" | "VALID";
       errors: ValidationIssue[];

@@ -1,12 +1,11 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://facet.local/schemas/actor-preview-request.v0.14.json",
-  "title": "ActorPreviewRequestV014",
+  "$id": "https://facet.local/schemas/actor-preview-request.v0.15.json",
+  "title": "ActorPreviewRequestV015",
   "type": "object",
   "additionalProperties": false,
-  "required": ["providerId", "code", "inputSchema", "input"],
+  "required": ["code", "inputSchema", "input"],
   "properties": {
-    "providerId": { "type": "string", "format": "uuid" },
     "code": { "type": "string", "minLength": 10, "maxLength": 131072 },
     "inputSchema": { "type": "object" },
     "input": { "type": "object" }

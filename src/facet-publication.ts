@@ -1,26 +1,29 @@
 export type PublishedFacetVisibility = "UNLISTED" | "PUBLIC";
 
 export interface PublishFacetVersionRequest {
-  version: number;
+  revision: number;
   visibility: PublishedFacetVisibility;
 }
 
 export interface PublishFacetVersionResponse {
   facet: {
-    id: string;
+    creator: string;
+    facetName: string;
+    facetDisplayName: string;
+    facetType: "API" | "ACTOR" | "AGENT";
     status: "PUBLISHED";
     visibility: PublishedFacetVisibility;
-    currentPublishedVersionId: string;
-    version: number;
+    currentPublishedVersion: string;
+    revision: number;
   };
   facetVersion: {
-    id: string;
-    facetId: string;
-    displayVersion: string;
+    creator: string;
+    facetName: string;
+    version: string;
     status: "PUBLISHED";
     visibility: PublishedFacetVisibility;
     contentHash: string;
     publishedAt: string;
-    version: number;
+    revision: number;
   };
 }

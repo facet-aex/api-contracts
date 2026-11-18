@@ -1,14 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://facet.local/schemas/public-catalog-list.v0.10.json",
-  "title": "ListPublicFacetsResponse",
+  "$id": "https://facet.local/schemas/public-catalog-list.v0.15.json",
+  "title": "ListPublicFacetsResponseV015",
   "type": "object",
   "additionalProperties": false,
   "required": ["facets"],
   "properties": {
     "facets": {
       "type": "array",
-      "items": { "$ref": "public-facet.v0.10.json" }
+      "items": {
+        "$ref": "https://facet.local/schemas/public-facet.v0.15.json"
+      }
     }
   }
 }

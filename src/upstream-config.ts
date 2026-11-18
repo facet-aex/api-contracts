@@ -43,18 +43,19 @@ export interface EndpointConfigRequest {
 }
 
 export interface EndpointConfigMetadata {
-  id: string;
-  facetVersionId: string;
-  facetVersionVersion: number;
+  creator: string;
+  facetName: string;
+  version: string;
+  facetVersionRevision: number;
   baseUrlConfigured: true;
   method: string;
   pathTemplate: string;
   authKind: EndpointAuthKind;
-  secretRefId: string | null;
+  secretConfigured: boolean;
   timeoutMs: number;
   maxResponseBytes: number;
   redirectPolicy: "DENY" | "SAME_ORIGIN";
-  version: number;
+  revision: number;
   createdAt: string;
   updatedAt: string;
 }

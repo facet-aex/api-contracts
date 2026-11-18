@@ -1,22 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://facet.local/schemas/executor-run-request.v0.13.json",
-  "title": "ExecutorRunRequestV013",
+  "$id": "https://facet.local/schemas/executor-run-request.v0.15.json",
+  "title": "ExecutorRunRequestV015",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "runId",
-    "facetId",
-    "facetVersionId",
-    "facetType",
-    "input",
-    "timeoutMs"
-  ],
+  "required": ["runId", "facetId", "facetType", "input", "timeoutMs"],
   "properties": {
     "runId": { "type": "string", "format": "uuid" },
     "facetId": { "type": "string", "format": "uuid" },
-    "facetVersionId": { "type": "string", "format": "uuid" },
-    "facetType": { "enum": ["HOSTED_ACTOR", "AUTONOMOUS_AGENT"] },
+    "facetType": { "enum": ["ACTOR", "AGENT"] },
     "input": { "type": "object" },
     "timeoutMs": { "type": "integer", "minimum": 100, "maximum": 60000 },
     "actorBundle": {

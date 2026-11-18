@@ -9,8 +9,9 @@ export type SideEffectClass = (typeof SIDE_EFFECT_CLASSES)[number];
 
 export interface CreateFacetDraftSelection {
   operationCandidateId: string;
-  slug: string;
-  name: string;
+  facetName: string;
+  facetDisplayName: string;
+  version?: string;
   summary?: string;
   description?: string;
   category: string;
@@ -19,19 +20,17 @@ export interface CreateFacetDraftSelection {
 }
 
 export interface CreateFacetDraftsRequest {
-  providerId: string;
   importJobId: string;
   selections: CreateFacetDraftSelection[];
 }
 
 export interface FacetDraftVersion {
-  id: string;
-  displayVersion: string;
+  version: string;
   status: "DRAFT";
   sourceVersionId: string;
   sourceOperationPointer: string;
   contentHash: string;
-  version: number;
+  revision: number;
   validation: {
     status: "PENDING";
     errors: unknown[];
@@ -40,13 +39,13 @@ export interface FacetDraftVersion {
 }
 
 export interface FacetDraft {
-  id: string;
-  providerId: string;
-  slug: string;
-  type: "EXTERNAL_HTTP_API";
+  creator: string;
+  facetName: string;
+  facetDisplayName: string;
+  type: "API";
   status: "DRAFT";
   visibility: "PRIVATE";
-  version: number;
+  revision: number;
   createdAt: string;
   draftVersion: FacetDraftVersion;
 }
