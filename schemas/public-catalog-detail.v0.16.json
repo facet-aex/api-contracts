@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/public-catalog-detail.v0.16.json",
+  "title": "GetPublicFacetResponseV016",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["facet"],
+  "properties": {
+    "facet": { "$ref": "https://facet.local/schemas/public-facet.v0.16.json" }
+  }
+}

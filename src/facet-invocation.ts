@@ -1,7 +1,16 @@
-import type { ExecutorRunUsage, FacetType } from "./actor-and-agent.js";
+import type {
+  ExecutorRunUsage,
+  FacetType,
+  PricingModel,
+} from "./actor-and-agent.js";
 
 export interface InvokeFacetRequest {
   input: Record<string, unknown>;
+}
+
+export interface InvokeFacetRequestV016 {
+  input: Record<string, unknown>;
+  pricingModel?: PricingModel;
 }
 
 export interface InvokeFacetPayment {
@@ -11,6 +20,15 @@ export interface InvokeFacetPayment {
   payer: string;
   providerPayTo: string;
   payTo?: string;
+}
+
+export interface InvokeFacetPaymentV016 extends InvokeFacetPayment {
+  pricingModel: PricingModel;
+  unitPriceAtomic?: string;
+  maxItemsCap?: number;
+  depositedAmountAtomic?: string;
+  refundAmountAtomic?: string;
+  depositTxHash?: string;
 }
 
 export interface RunReceiptMetadata {
@@ -35,6 +53,26 @@ export interface InvokeFacetResponse {
   replayed: boolean;
   payment: InvokeFacetPayment;
   receipt: RunReceiptMetadata;
+}
+
+export interface InvokeFacetResponseV016 extends Omit<
+  InvokeFacetResponse,
+  "payment"
+> {
+  payment: InvokeFacetPaymentV016;
+}
+
+export interface InvokeFacetRefundedErrorResponse {
+  error: {
+    code: string;
+    message?: string;
+  };
+  runId: string;
+  payment?: {
+    status: "refunded";
+    transaction: string;
+    refundAmountAtomic: string;
+  };
 }
 
 export type InvokeFacetPendingStatus =

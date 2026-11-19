@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/invoke-facet-response.v0.16.json",
+  "title": "InvokeFacetResponseV016",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "runId",
+    "provider",
+    "facetName",
+    "facetDisplayName",
+    "version",
+    "facetType",
+    "result",
+    "replayed",
+    "payment",
+    "receipt"
+  ],
+  "properties": {
+    "runId": { "type": "string", "format": "uuid" },
+    "provider": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 16,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "facetName": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 32,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "facetDisplayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "version": {
+      "type": "string",
+      "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$"
+    },
+    "facetType": { "enum": ["API", "ACTOR", "AGENT"] },
+    "result": {},
+    "dataset": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["itemCount", "durationMs", "outputHash", "runnerSignature"],
+      "properties": {
+        "itemCount": { "type": "integer", "minimum": 0 },
+        "durationMs": { "type": "integer", "minimum": 0 },
+        "outputHash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "runnerSignature": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]+$"
+        }
+      }
+    },
+    "replayed": { "type": "boolean" },
+    "payment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transaction",
+        "network",
+        "pricingModel",
+        "amountAtomic",
+        "payer",
+        "providerPayTo"
+      ],
+      "properties": {
+        "transaction": { "type": "string", "pattern": "^0x[a-fA-F0-9]{64}$" },
+        "network": { "const": "eip155:43113" },
+        "pricingModel": { "enum": ["PAY_PER_RUN", "PAY_PER_RESULT"] },
+        "amountAtomic": { "type": "string", "pattern": "^[0-9]+$" },
+        "unitPriceAtomic": { "type": "string", "pattern": "^[1-9][0-9]*$" },
+        "maxItemsCap": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "depositedAmountAtomic": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$"
+        },
+        "refundAmountAtomic": { "type": "string", "pattern": "^[0-9]+$" },
+        "depositTxHash": { "type": "string", "pattern": "^0x[a-fA-F0-9]{64}$" },
+        "payer": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" },
+        "providerPayTo": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+        },
+        "payTo": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inputHash",
+        "outputHash",
+        "itemCount",
+        "paymentTxHash",
+        "receiptTxHash",
+        "runnerSignature"
+      ],
+      "properties": {
+        "inputHash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "outputHash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "itemCount": { "type": "integer", "minimum": 0 },
+        "paymentTxHash": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]{64}$"
+        },
+        "receiptTxHash": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]{64}$"
+        },
+        "runnerSignature": { "type": "string", "pattern": "^0x[a-fA-F0-9]+$" }
+      }
+    }
+  }
+}

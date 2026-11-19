@@ -61,6 +61,7 @@ export type {
   EndpointAuthKind,
   EndpointConfigMetadata,
   EndpointConfigRequest,
+  EndpointConfigRequestV016,
   EndpointConfigResponse,
   RotateSecretRequest,
   SecretKind,
@@ -71,6 +72,7 @@ export { SECRET_KINDS } from "./upstream-config.js";
 export type {
   ValidateFacetVersionRequest,
   ValidateFacetVersionResponse,
+  ValidateFacetVersionResponseV016,
   ValidationIssue,
   ValidationWarning,
   WarningAcknowledgement,
@@ -83,8 +85,11 @@ export type {
 } from "./facet-publication.js";
 export type {
   PublicFacet,
+  PublicFacetV016,
   ListPublicFacetsResponse,
+  ListPublicFacetsResponseV016,
   GetPublicFacetResponse,
+  GetPublicFacetResponseV016,
 } from "./public-catalog.js";
 export type {
   ImporterOperationCandidate,
@@ -108,27 +113,47 @@ export type {
   AgentFacetMetadata,
   CreateActorPendingResponse,
   CreateActorRequest,
+  CreateActorRequestV016,
   CreateActorResponse,
   CreateAgentFacetRequest,
   CreateAgentFacetResponse,
+  CreatePricingOptionInput,
   ExecutorRunRequest,
   ExecutorRunResponse,
   ExecutorRunUsage,
   FacetPricing,
+  FacetPricingOption,
   FacetType,
   PricingModel,
 } from "./actor-and-agent.js";
 export { FACET_TYPES, PRICING_MODELS } from "./actor-and-agent.js";
 export type {
   InvokeFacetPayment,
+  InvokeFacetPaymentV016,
   InvokeFacetPendingResponse,
   InvokeFacetPendingStatus,
+  InvokeFacetRefundedErrorResponse,
   InvokeFacetRequest,
+  InvokeFacetRequestV016,
   InvokeFacetResponse,
+  InvokeFacetResponseV016,
   RunReceiptMetadata,
 } from "./facet-invocation.js";
+export type { FaucetClaimRequest, FaucetClaimResponse } from "./faucet.js";
+export type {
+  ApiMeta,
+  ApiPreviewChecks,
+  ApiPreviewRequest,
+  ApiPreviewResponse,
+  ApiUpstreamAuthConfig,
+  CreateApiFacetPendingResponse,
+  CreateApiFacetRequest,
+  HttpMethod,
+  X402AcceptsExtra,
+} from "./api-authoring.js";
+export { HTTP_METHODS } from "./api-authoring.js";
 
-export const CONTRACT_VERSION = "0.15.0" as const;
+export const CONTRACT_VERSION = "0.16.0" as const;
 
 export const WALLET_LINK_CHALLENGE_REQUEST_SCHEMA_ID =
   "https://facet.local/schemas/wallet-link-challenge-request.v0.14.json" as const;
@@ -206,3 +231,36 @@ export const SECRET_REF_RESPONSE_SCHEMA_ID =
   "https://facet.local/schemas/secret-ref-response.v0.7.json" as const;
 export const FACET_MANIFEST_SCHEMA_ID =
   "https://facet.local/schemas/facet-manifest.v1.json" as const;
+
+export const PRICING_OPTION_V016_SCHEMA_ID =
+  "https://facet.local/schemas/pricing-option.v0.16.json" as const;
+export const PUBLIC_FACET_V016_SCHEMA_ID =
+  "https://facet.local/schemas/public-facet.v0.16.json" as const;
+export const PUBLIC_CATALOG_LIST_V016_SCHEMA_ID =
+  "https://facet.local/schemas/public-catalog-list.v0.16.json" as const;
+export const PUBLIC_CATALOG_DETAIL_V016_SCHEMA_ID =
+  "https://facet.local/schemas/public-catalog-detail.v0.16.json" as const;
+export const CREATE_ACTOR_REQUEST_V016_SCHEMA_ID =
+  "https://facet.local/schemas/create-actor-request.v0.16.json" as const;
+export const INVOKE_FACET_REQUEST_V016_SCHEMA_ID =
+  "https://facet.local/schemas/invoke-facet-request.v0.16.json" as const;
+export const INVOKE_FACET_RESPONSE_V016_SCHEMA_ID =
+  "https://facet.local/schemas/invoke-facet-response.v0.16.json" as const;
+export const API_PREVIEW_REQUEST_V016_SCHEMA_ID =
+  "https://facet.local/schemas/api-preview-request.v0.16.json" as const;
+export const API_PREVIEW_RESPONSE_V016_SCHEMA_ID =
+  "https://facet.local/schemas/api-preview-response.v0.16.json" as const;
+export const CREATE_API_FACET_REQUEST_V016_SCHEMA_ID =
+  "https://facet.local/schemas/create-api-facet-request.v0.16.json" as const;
+export const CREATE_API_FACET_PENDING_RESPONSE_V016_SCHEMA_ID =
+  "https://facet.local/schemas/create-api-facet-pending-response.v0.16.json" as const;
+export const ENDPOINT_CONFIG_REQUEST_V016_SCHEMA_ID =
+  "https://facet.local/schemas/endpoint-config-request.v0.16.json" as const;
+export const ENDPOINT_CONFIG_RESPONSE_V016_SCHEMA_ID =
+  "https://facet.local/schemas/endpoint-config-response.v0.16.json" as const;
+export const VALIDATE_FACET_VERSION_RESPONSE_V016_SCHEMA_ID =
+  "https://facet.local/schemas/validate-facet-version-response.v0.16.json" as const;
+export const FAUCET_CLAIM_REQUEST_V016_SCHEMA_ID =
+  "https://facet.local/schemas/faucet-claim-request.v0.16.json" as const;
+export const FAUCET_CLAIM_RESPONSE_V016_SCHEMA_ID =
+  "https://facet.local/schemas/faucet-claim-response.v0.16.json" as const;

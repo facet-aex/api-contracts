@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/faucet-claim-response.v0.16.json",
+  "title": "FaucetClaimResponseV016",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "address",
+    "amountAtomic",
+    "balanceAtomic",
+    "txHash",
+    "explorerUrl",
+    "nextClaimAt"
+  ],
+  "properties": {
+    "address": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" },
+    "amountAtomic": { "type": "string", "pattern": "^[1-9][0-9]*$" },
+    "balanceAtomic": { "type": "string", "pattern": "^[0-9]+$" },
+    "txHash": { "type": "string", "pattern": "^0x[a-fA-F0-9]{64}$" },
+    "explorerUrl": { "type": "string", "format": "uri", "maxLength": 2048 },
+    "nextClaimAt": { "type": "string", "format": "date-time" }
+  }
+}

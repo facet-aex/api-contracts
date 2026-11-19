@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/public-facet.v0.16.json",
+  "title": "PublicFacetV016",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "provider",
+    "facetName",
+    "facetDisplayName",
+    "version",
+    "facetType",
+    "description",
+    "category",
+    "tags",
+    "method",
+    "inputSchema",
+    "outputSchema",
+    "pricing",
+    "pricingOptions",
+    "publishedAt"
+  ],
+  "properties": {
+    "provider": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 16,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "facetName": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 32,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "facetDisplayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "version": {
+      "type": "string",
+      "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$"
+    },
+    "facetType": { "enum": ["API", "ACTOR", "AGENT"] },
+    "summary": { "type": "string", "maxLength": 280 },
+    "description": { "type": "string" },
+    "category": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "method": { "type": "string" },
+    "inputSchema": {},
+    "outputSchema": {},
+    "pricing": {
+      "$ref": "https://facet.local/schemas/pricing-option.v0.16.json"
+    },
+    "pricingOptions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "$ref": "https://facet.local/schemas/pricing-option.v0.16.json"
+      }
+    },
+    "apiMeta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "pathTemplate"],
+      "properties": {
+        "method": { "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"] },
+        "pathTemplate": { "type": "string", "pattern": "^/" },
+        "datasetPath": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "staticHeaderNames": { "type": "array", "items": { "type": "string" } },
+        "registryTxHash": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]{64}$"
+        },
+        "registryVerified": { "type": "boolean" }
+      }
+    },
+    "actorMeta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime", "imageDigest"],
+      "properties": {
+        "runtime": { "type": "string" },
+        "imageDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "runnerOciDigest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "registryTxHash": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]{64}$"
+        },
+        "registryVerified": { "type": "boolean" }
+      }
+    },
+    "agentMeta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "erc8004ChainId",
+        "erc8004Registry",
+        "erc8004TokenId",
+        "taskKind"
+      ],
+      "properties": {
+        "erc8004ChainId": { "const": 43113 },
+        "erc8004Registry": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]{40}$"
+        },
+        "erc8004TokenId": { "type": "string", "pattern": "^[0-9]+$" },
+        "taskKind": { "type": "string" },
+        "registryTxHash": {
+          "type": "string",
+          "pattern": "^0x[a-fA-F0-9]{64}$"
+        },
+        "registryVerified": { "type": "boolean" }
+      }
+    },
+    "publishedAt": { "type": "string", "format": "date-time" }
+  }
+}

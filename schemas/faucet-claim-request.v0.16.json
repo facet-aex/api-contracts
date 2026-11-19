@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/faucet-claim-request.v0.16.json",
+  "title": "FaucetClaimRequestV016",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["address"],
+  "properties": {
+    "address": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" }
+  }
+}

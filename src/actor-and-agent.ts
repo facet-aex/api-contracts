@@ -12,6 +12,24 @@ export interface FacetPricing {
   payTo: string;
 }
 
+export interface FacetPricingOption {
+  model: PricingModel;
+  priceAtomic: string;
+  maxItemsCap?: number;
+  maxAmountAtomic: string;
+  assetAddress: string;
+  chainId: 43113;
+  payTo: string;
+  isPrimary: boolean;
+}
+
+export interface CreatePricingOptionInput {
+  model: PricingModel;
+  priceAtomic: string;
+  maxItemsCap?: number;
+  isPrimary?: boolean;
+}
+
 export interface ActorFacetMetadata {
   runtime: string;
   imageDigest: string;
@@ -42,6 +60,25 @@ export interface CreateActorRequest {
   code: string;
   pricingModel?: "PAY_PER_RUN";
   priceAtomic?: string;
+  payTo?: string;
+  registryTxHash?: string;
+}
+
+export interface CreateActorRequestV016 {
+  facetName: string;
+  facetDisplayName: string;
+  version?: string;
+  summary?: string;
+  description: string;
+  category: string;
+  tags?: string[];
+  inputSchema: Record<string, unknown>;
+  outputSchema?: Record<string, unknown>;
+  code: string;
+  pricingModel?: PricingModel;
+  priceAtomic?: string;
+  maxItemsCap?: number;
+  pricingOptions?: CreatePricingOptionInput[];
   payTo?: string;
   registryTxHash?: string;
 }

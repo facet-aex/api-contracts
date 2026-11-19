@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/api-preview-response.v0.16.json",
+  "title": "ApiPreviewResponseV016",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ok",
+    "statusCode",
+    "latencyMs",
+    "result",
+    "dataset",
+    "itemCount",
+    "checks"
+  ],
+  "properties": {
+    "ok": { "type": "boolean" },
+    "statusCode": { "type": "integer", "minimum": 0 },
+    "latencyMs": { "type": "integer", "minimum": 0 },
+    "contentType": { "type": "string" },
+    "result": {},
+    "dataset": { "type": "array", "items": { "type": "object" } },
+    "itemCount": { "type": "integer", "minimum": 0 },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "httpsValid",
+        "ssrfPassed",
+        "authConfigured",
+        "upstreamReachable",
+        "jsonValid",
+        "datasetExtracted"
+      ],
+      "properties": {
+        "httpsValid": { "type": "boolean" },
+        "ssrfPassed": { "type": "boolean" },
+        "authConfigured": { "type": "boolean" },
+        "upstreamReachable": { "type": "boolean" },
+        "jsonValid": { "type": "boolean" },
+        "datasetExtracted": { "type": "boolean" }
+      }
+    }
+  }
+}

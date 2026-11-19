@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/pricing-option.v0.16.json",
+  "title": "FacetPricingOptionV016",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "model",
+    "priceAtomic",
+    "maxAmountAtomic",
+    "assetAddress",
+    "chainId",
+    "payTo",
+    "isPrimary"
+  ],
+  "properties": {
+    "model": { "enum": ["PAY_PER_RUN", "PAY_PER_RESULT"] },
+    "priceAtomic": { "type": "string", "pattern": "^[1-9][0-9]*$" },
+    "maxItemsCap": { "type": "integer", "minimum": 1, "maximum": 1000 },
+    "maxAmountAtomic": { "type": "string", "pattern": "^[1-9][0-9]*$" },
+    "assetAddress": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" },
+    "chainId": { "const": 43113 },
+    "payTo": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" },
+    "isPrimary": { "type": "boolean" }
+  }
+}

@@ -5,14 +5,16 @@ export interface JsonSchemaNode {
   const?: unknown;
   enum?: unknown[];
   required?: string[];
-  additionalProperties?: boolean;
+  additionalProperties?: boolean | JsonSchemaNode;
   properties?: Record<string, JsonSchemaNode>;
   items?: JsonSchemaNode;
   pattern?: string;
   minLength?: number;
   maxLength?: number;
+  minItems?: number;
   maxItems?: number;
   minimum?: number;
+  maximum?: number;
   format?: string;
   anyOf?: JsonSchemaNode[];
   oneOf?: JsonSchemaNode[];
@@ -123,11 +125,17 @@ export function validateAgainstSchema(
     if (schema.minimum !== undefined && value < schema.minimum) {
       return [`${path}: number below minimum ${schema.minimum}`];
     }
+    if (schema.maximum !== undefined && value > schema.maximum) {
+      return [`${path}: number above maximum ${schema.maximum}`];
+    }
     return [];
   }
 
   if (Array.isArray(value)) {
     const errors: string[] = [];
+    if (schema.minItems !== undefined && value.length < schema.minItems) {
+      errors.push(`${path}: array below minItems ${schema.minItems}`);
+    }
     if (schema.maxItems !== undefined && value.length > schema.maxItems) {
       errors.push(`${path}: array exceeds maxItems ${schema.maxItems}`);
     }
@@ -160,6 +168,18 @@ export function validateAgainstSchema(
       if (!propSchema) {
         if (schema.additionalProperties === false) {
           errors.push(`${path}.${key}: unexpected additional property`);
+        } else if (
+          schema.additionalProperties &&
+          typeof schema.additionalProperties === "object"
+        ) {
+          errors.push(
+            ...validateAgainstSchema(
+              schema.additionalProperties,
+              propValue,
+              registry,
+              `${path}.${key}`,
+            ),
+          );
         }
         continue;
       }

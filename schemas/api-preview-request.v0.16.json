@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/api-preview-request.v0.16.json",
+  "title": "ApiPreviewRequestV016",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "method",
+    "baseUrl",
+    "pathTemplate",
+    "auth",
+    "inputSchema",
+    "input"
+  ],
+  "properties": {
+    "method": { "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"] },
+    "baseUrl": { "type": "string", "format": "uri", "maxLength": 2048 },
+    "pathTemplate": { "type": "string", "pattern": "^/" },
+    "auth": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "NONE" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": {
+            "kind": { "enum": ["BEARER", "BASIC"] },
+            "secretRefId": { "type": "string", "format": "uuid" },
+            "secretValue": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "secretLabel": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "parameterName"],
+          "properties": {
+            "kind": { "enum": ["API_KEY_HEADER", "API_KEY_QUERY"] },
+            "parameterName": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120,
+              "pattern": "^[A-Za-z0-9._~-]+$"
+            },
+            "secretRefId": { "type": "string", "format": "uuid" },
+            "secretValue": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "secretLabel": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            }
+          }
+        }
+      ]
+    },
+    "staticHeaders": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "maxLength": 2048 }
+    },
+    "requestBodyMediaType": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "datasetPath": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "timeoutMs": { "type": "integer", "minimum": 100, "maximum": 60000 },
+    "maxResponseBytes": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 10485760
+    },
+    "redirectPolicy": { "enum": ["DENY", "SAME_ORIGIN"] },
+    "inputSchema": { "type": "object" },
+    "input": { "type": "object" }
+  }
+}

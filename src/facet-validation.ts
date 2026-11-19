@@ -39,3 +39,19 @@ export interface ValidateFacetVersionResponse {
     warningAcknowledgements: WarningAcknowledgement[];
   };
 }
+
+export interface ValidateFacetVersionResponseV016 {
+  facetVersion: {
+    provider: string;
+    facetName: string;
+    version: string;
+    status: "DRAFT" | "VALID";
+    revision: number;
+    validation: {
+      status: "INVALID" | "VALID";
+      errors: ValidationIssue[];
+      warnings: ValidationWarning[];
+    };
+    warningAcknowledgements: WarningAcknowledgement[];
+  };
+}

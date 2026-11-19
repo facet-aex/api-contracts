@@ -1,4 +1,4 @@
-export const SECRET_KINDS = ["API_KEY", "BEARER_TOKEN"] as const;
+export const SECRET_KINDS = ["API_KEY", "BEARER_TOKEN", "BASIC_AUTH"] as const;
 export type SecretKind = (typeof SECRET_KINDS)[number];
 
 export interface CreateSecretRequest {
@@ -27,7 +27,7 @@ export interface SecretRefResponse {
 }
 
 export type EndpointAuthKind =
-  "NONE" | "API_KEY_HEADER" | "API_KEY_QUERY" | "BEARER";
+  "NONE" | "API_KEY_HEADER" | "API_KEY_QUERY" | "BEARER" | "BASIC";
 
 export interface EndpointConfigRequest {
   revision: number;
@@ -42,6 +42,12 @@ export interface EndpointConfigRequest {
   redirectPolicy: "DENY" | "SAME_ORIGIN";
 }
 
+export interface EndpointConfigRequestV016 extends EndpointConfigRequest {
+  staticHeaders?: Record<string, string>;
+  requestBodyMediaType?: string;
+  datasetPath?: string;
+}
+
 export interface EndpointConfigMetadata {
   provider: string;
   facetName: string;
@@ -52,6 +58,9 @@ export interface EndpointConfigMetadata {
   pathTemplate: string;
   authKind: EndpointAuthKind;
   secretConfigured: boolean;
+  staticHeaderNames?: string[];
+  requestBodyMediaType?: string;
+  datasetPath?: string;
   timeoutMs: number;
   maxResponseBytes: number;
   redirectPolicy: "DENY" | "SAME_ORIGIN";

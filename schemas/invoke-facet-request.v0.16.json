@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.local/schemas/invoke-facet-request.v0.16.json",
+  "title": "InvokeFacetRequestV016",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["input"],
+  "properties": {
+    "input": { "type": "object" },
+    "pricingModel": { "enum": ["PAY_PER_RUN", "PAY_PER_RESULT"] }
+  }
+}

@@ -6,41 +6,59 @@ import {
   ACTOR_PREVIEW_REQUEST_V015_SCHEMA_ID,
   ACTOR_PREVIEW_RESPONSE_V015_SCHEMA_ID,
   ACTOR_PUBLISH_STATUS_RESPONSE_V015_SCHEMA_ID,
+  API_PREVIEW_REQUEST_V016_SCHEMA_ID,
+  API_PREVIEW_RESPONSE_V016_SCHEMA_ID,
   CONTRACT_VERSION,
   CREATE_ACTOR_PENDING_RESPONSE_V015_SCHEMA_ID,
   CREATE_ACTOR_REQUEST_V015_SCHEMA_ID,
+  CREATE_ACTOR_REQUEST_V016_SCHEMA_ID,
   CREATE_ACTOR_RESPONSE_V015_SCHEMA_ID,
   CREATE_AGENT_FACET_REQUEST_V015_SCHEMA_ID,
   CREATE_AGENT_FACET_RESPONSE_V015_SCHEMA_ID,
+  CREATE_API_FACET_PENDING_RESPONSE_V016_SCHEMA_ID,
+  CREATE_API_FACET_REQUEST_V016_SCHEMA_ID,
   CREATE_FACET_DRAFTS_REQUEST_V015_SCHEMA_ID,
   CREATE_FACET_DRAFTS_RESPONSE_V015_SCHEMA_ID,
   CREATE_SECRET_REQUEST_SCHEMA_ID,
   ENDPOINT_CONFIG_REQUEST_V015_SCHEMA_ID,
+  ENDPOINT_CONFIG_REQUEST_V016_SCHEMA_ID,
   ENDPOINT_CONFIG_RESPONSE_V015_SCHEMA_ID,
+  ENDPOINT_CONFIG_RESPONSE_V016_SCHEMA_ID,
   ERROR_SCHEMA_ID,
   EXECUTOR_RUN_REQUEST_V015_SCHEMA_ID,
   EXECUTOR_RUN_RESPONSE_V015_SCHEMA_ID,
   FACET_MANIFEST_SCHEMA_ID,
   FACET_NAME_PATTERN,
   FACET_TYPES,
+  FAUCET_CLAIM_REQUEST_V016_SCHEMA_ID,
+  FAUCET_CLAIM_RESPONSE_V016_SCHEMA_ID,
   HEALTH_SCHEMA_ID,
+  HTTP_METHODS,
   IMPORTER_PARSE_REQUEST_SCHEMA_ID,
   IMPORTER_PARSE_RESPONSE_SCHEMA_ID,
   INVOKE_FACET_PENDING_V015_SCHEMA_ID,
   INVOKE_FACET_REQUEST_SCHEMA_ID,
+  INVOKE_FACET_REQUEST_V016_SCHEMA_ID,
   INVOKE_FACET_RESPONSE_V015_SCHEMA_ID,
+  INVOKE_FACET_RESPONSE_V016_SCHEMA_ID,
+  PRICING_OPTION_V016_SCHEMA_ID,
   PUBLIC_CATALOG_DETAIL_V015_SCHEMA_ID,
+  PUBLIC_CATALOG_DETAIL_V016_SCHEMA_ID,
   PUBLIC_CATALOG_LIST_V015_SCHEMA_ID,
+  PUBLIC_CATALOG_LIST_V016_SCHEMA_ID,
   PUBLIC_FACET_V015_SCHEMA_ID,
+  PUBLIC_FACET_V016_SCHEMA_ID,
   PUBLIC_PROVIDER_V015_SCHEMA_ID,
   PUBLISH_FACET_VERSION_REQUEST_V015_SCHEMA_ID,
   PUBLISH_FACET_VERSION_RESPONSE_V015_SCHEMA_ID,
   ROTATE_SECRET_REQUEST_SCHEMA_ID,
+  SECRET_KINDS,
   SECRET_REF_RESPONSE_SCHEMA_ID,
   SEMVER_PATTERN,
   USERNAME_PATTERN,
   VALIDATE_FACET_VERSION_REQUEST_V015_SCHEMA_ID,
   VALIDATE_FACET_VERSION_RESPONSE_V015_SCHEMA_ID,
+  VALIDATE_FACET_VERSION_RESPONSE_V016_SCHEMA_ID,
   WALLET_LINK_CHALLENGE_REQUEST_SCHEMA_ID,
   WALLET_LINK_CHALLENGE_RESPONSE_SCHEMA_ID,
   WALLET_LINK_REQUEST_SCHEMA_ID,
@@ -54,19 +72,34 @@ import {
   type ActorPreviewRequest,
   type ActorPreviewResponse,
   type ActorPublishStatusResponse,
+  type ApiPreviewRequest,
+  type ApiPreviewResponse,
   type CreateActorPendingResponse,
   type CreateActorRequest,
+  type CreateActorRequestV016,
   type CreateActorResponse,
   type CreateAgentFacetRequest,
   type CreateAgentFacetResponse,
+  type CreateApiFacetPendingResponse,
+  type CreateApiFacetRequest,
   type EndpointConfigRequest,
+  type EndpointConfigRequestV016,
   type ExecutorRunRequest,
+  type FacetPricingOption,
+  type FaucetClaimRequest,
+  type FaucetClaimResponse,
   type GetPublicFacetResponse,
+  type GetPublicFacetResponseV016,
   type InvokeFacetPendingResponse,
+  type InvokeFacetRequestV016,
   type InvokeFacetResponse,
+  type InvokeFacetResponseV016,
   type ListPublicFacetsResponse,
+  type ListPublicFacetsResponseV016,
   type PublicFacet,
+  type PublicFacetV016,
   type PublicProvider,
+  type ValidateFacetVersionResponseV016,
   type WalletLinkChallengeRequest,
   type WalletLinkChallengeResponse,
   type WalletLinkRequest,
@@ -86,9 +119,11 @@ async function readSchema(
 }
 
 describe("v0.15.0 canonical Option B contracts", () => {
-  it("pins CONTRACT_VERSION at 0.15.0 and uppercase FACET_TYPES API | ACTOR | AGENT", () => {
-    expect(CONTRACT_VERSION).toBe("0.15.0");
+  it("pins CONTRACT_VERSION at 0.16.0 and uppercase FACET_TYPES API | ACTOR | AGENT", () => {
+    expect(CONTRACT_VERSION).toBe("0.16.0");
     expect(FACET_TYPES).toEqual(["API", "ACTOR", "AGENT"]);
+    expect(HTTP_METHODS).toEqual(["GET", "POST", "PUT", "PATCH", "DELETE"]);
+    expect(SECRET_KINDS).toEqual(["API_KEY", "BEARER_TOKEN", "BASIC_AUTH"]);
     expect(USERNAME_PATTERN).toBe("^[a-z0-9]+(?:-[a-z0-9]+)*$");
     expect(FACET_NAME_PATTERN).toBe("^[a-z0-9]+(?:-[a-z0-9]+)*$");
     expect(SEMVER_PATTERN).toBe(
@@ -636,5 +671,395 @@ describe("v0.15.0 canonical Option B contracts", () => {
       },
     };
     expect(validateAgainstSchema(invokePendingSchema, pending)).toEqual([]);
+  });
+
+  it("validates v0.16.0 multi-pricing, TaskEscrow, full HTTP API authoring, validation, and Faucet schemas", async () => {
+    const v016Schemas = [
+      ["pricing-option.v0.16.json", PRICING_OPTION_V016_SCHEMA_ID],
+      ["public-facet.v0.16.json", PUBLIC_FACET_V016_SCHEMA_ID],
+      ["public-catalog-list.v0.16.json", PUBLIC_CATALOG_LIST_V016_SCHEMA_ID],
+      [
+        "public-catalog-detail.v0.16.json",
+        PUBLIC_CATALOG_DETAIL_V016_SCHEMA_ID,
+      ],
+      ["create-actor-request.v0.16.json", CREATE_ACTOR_REQUEST_V016_SCHEMA_ID],
+      ["invoke-facet-request.v0.16.json", INVOKE_FACET_REQUEST_V016_SCHEMA_ID],
+      [
+        "invoke-facet-response.v0.16.json",
+        INVOKE_FACET_RESPONSE_V016_SCHEMA_ID,
+      ],
+      ["api-preview-request.v0.16.json", API_PREVIEW_REQUEST_V016_SCHEMA_ID],
+      ["api-preview-response.v0.16.json", API_PREVIEW_RESPONSE_V016_SCHEMA_ID],
+      [
+        "create-api-facet-request.v0.16.json",
+        CREATE_API_FACET_REQUEST_V016_SCHEMA_ID,
+      ],
+      [
+        "create-api-facet-pending-response.v0.16.json",
+        CREATE_API_FACET_PENDING_RESPONSE_V016_SCHEMA_ID,
+      ],
+      [
+        "endpoint-config-request.v0.16.json",
+        ENDPOINT_CONFIG_REQUEST_V016_SCHEMA_ID,
+      ],
+      [
+        "endpoint-config-response.v0.16.json",
+        ENDPOINT_CONFIG_RESPONSE_V016_SCHEMA_ID,
+      ],
+      [
+        "validate-facet-version-response.v0.16.json",
+        VALIDATE_FACET_VERSION_RESPONSE_V016_SCHEMA_ID,
+      ],
+      ["faucet-claim-request.v0.16.json", FAUCET_CLAIM_REQUEST_V016_SCHEMA_ID],
+      [
+        "faucet-claim-response.v0.16.json",
+        FAUCET_CLAIM_RESPONSE_V016_SCHEMA_ID,
+      ],
+    ] as const;
+
+    const registry = new Map<string, JsonSchemaNode>();
+    for (const [filename, expectedId] of v016Schemas) {
+      const schema = await readSchema(filename);
+      expect(schema.$id).toBe(expectedId);
+      const text = JSON.stringify(schema);
+      expect(text).not.toMatch(
+        /EXTERNAL_HTTP_API|HOSTED_ACTOR|AUTONOMOUS_AGENT|facetSlug|facetFullName|displayVersion|\bfullName\b|\bcreator\b|creatorPayTo|\b(facetId|versionId|facetVersionId)\b/u,
+      );
+      registry.set(expectedId, schema);
+    }
+
+    const payPerRunOption: FacetPricingOption = {
+      model: "PAY_PER_RUN",
+      priceAtomic: "1000",
+      maxAmountAtomic: "1000",
+      assetAddress: "0xe7082a54a456dc4dfe0ceadcd0d0dce7d8ba176f",
+      chainId: 43113,
+      payTo: "0x9265c1c87fC5fb3C72Dc68b4D3A005dE1E22C3cf",
+      isPrimary: true,
+    };
+    const payPerResultOption: FacetPricingOption = {
+      model: "PAY_PER_RESULT",
+      priceAtomic: "500",
+      maxItemsCap: 15,
+      maxAmountAtomic: "7500",
+      assetAddress: "0xe7082a54a456dc4dfe0ceadcd0d0dce7d8ba176f",
+      chainId: 43113,
+      payTo: "0x9265c1c87fC5fb3C72Dc68b4D3A005dE1E22C3cf",
+      isPrimary: false,
+    };
+
+    const publicFacet016: PublicFacetV016 = {
+      provider: "tai-hung-dev",
+      facetName: "vn-news-api",
+      facetDisplayName: "VN News Feed API",
+      version: "1.0.0",
+      facetType: "API",
+      summary: "Structured Vietnam tech news",
+      description: "Returns normalized Vietnam tech articles.",
+      category: "data",
+      tags: ["vietnam", "news"],
+      method: "GET",
+      inputSchema: { type: "object", properties: {} },
+      outputSchema: { type: "object" },
+      pricing: payPerRunOption,
+      pricingOptions: [payPerRunOption, payPerResultOption],
+      apiMeta: {
+        method: "GET",
+        pathTemplate: "/v1/articles",
+        datasetPath: "data.items",
+        staticHeaderNames: ["X-Api-Version"],
+        registryTxHash: "0x" + "a".repeat(64),
+        registryVerified: true,
+      },
+      publishedAt: "2026-11-20T01:00:00Z",
+    };
+
+    expect(
+      validateAgainstSchema(
+        registry.get(PUBLIC_FACET_V016_SCHEMA_ID)!,
+        publicFacet016,
+        registry,
+      ),
+    ).toEqual([]);
+    expect(
+      validateAgainstSchema(
+        registry.get(PUBLIC_CATALOG_LIST_V016_SCHEMA_ID)!,
+        { facets: [publicFacet016] } satisfies ListPublicFacetsResponseV016,
+        registry,
+      ),
+    ).toEqual([]);
+    expect(
+      validateAgainstSchema(
+        registry.get(PUBLIC_CATALOG_DETAIL_V016_SCHEMA_ID)!,
+        { facet: publicFacet016 } satisfies GetPublicFacetResponseV016,
+        registry,
+      ),
+    ).toEqual([]);
+    expect(
+      validateAgainstSchema(
+        registry.get(PUBLIC_FACET_V016_SCHEMA_ID)!,
+        {
+          ...publicFacet016,
+          pricingOptions: [],
+        },
+        registry,
+      ),
+    ).not.toEqual([]);
+
+    const createActor016Schema = registry.get(
+      CREATE_ACTOR_REQUEST_V016_SCHEMA_ID,
+    )!;
+    const validActor016: CreateActorRequestV016 = {
+      facetName: "news-scraper",
+      facetDisplayName: "News Scraper",
+      version: "1.0.0",
+      description: "Scrapes news cleanly.",
+      category: "web-scraping",
+      inputSchema: { type: "object", properties: {} },
+      code: "export default async function run() { return [{ ok: true }]; }",
+      pricingOptions: [
+        { model: "PAY_PER_RUN", priceAtomic: "1000", isPrimary: true },
+        {
+          model: "PAY_PER_RESULT",
+          priceAtomic: "500",
+          maxItemsCap: 15,
+          isPrimary: false,
+        },
+      ],
+    };
+    expect(validateAgainstSchema(createActor016Schema, validActor016)).toEqual(
+      [],
+    );
+    expect(
+      validateAgainstSchema(createActor016Schema, {
+        ...validActor016,
+        pricingOptions: [{ model: "PAY_PER_RUN", priceAtomic: "0" }],
+      }),
+    ).not.toEqual([]);
+    expect(
+      validateAgainstSchema(createActor016Schema, {
+        ...validActor016,
+        pricingOptions: [
+          { model: "PAY_PER_RESULT", priceAtomic: "500", maxItemsCap: 0 },
+        ],
+      }),
+    ).not.toEqual([]);
+    expect(
+      validateAgainstSchema(createActor016Schema, {
+        ...validActor016,
+        pricingOptions: [
+          { model: "PAY_PER_RESULT", priceAtomic: "500", maxItemsCap: 1001 },
+        ],
+      }),
+    ).not.toEqual([]);
+
+    const invokeReq016Schema = registry.get(
+      INVOKE_FACET_REQUEST_V016_SCHEMA_ID,
+    )!;
+    const validInvokeReq: InvokeFacetRequestV016 = {
+      input: { q: "avalanche" },
+      pricingModel: "PAY_PER_RESULT",
+    };
+    expect(validateAgainstSchema(invokeReq016Schema, validInvokeReq)).toEqual(
+      [],
+    );
+    expect(
+      validateAgainstSchema(invokeReq016Schema, {
+        input: {},
+        pricingModel: "PAY_PER_EVENT",
+      }),
+    ).not.toEqual([]);
+
+    const invokeRes016: InvokeFacetResponseV016 = {
+      runId: "b55dcf50-5e15-42df-9cf6-a480efd5157d",
+      provider: "tai-hung-dev",
+      facetName: "vn-news-api",
+      facetDisplayName: "VN News Feed API",
+      version: "1.0.0",
+      facetType: "API",
+      result: { data: { items: [{ title: "hi" }] } },
+      dataset: [{ title: "hi" }],
+      usage: {
+        itemCount: 1,
+        durationMs: 88,
+        outputHash: "sha256:" + "d".repeat(64),
+        runnerSignature: "0x" + "ef".repeat(65),
+      },
+      replayed: false,
+      payment: {
+        transaction: "0x" + "2".repeat(64),
+        network: "eip155:43113",
+        pricingModel: "PAY_PER_RESULT",
+        amountAtomic: "500",
+        unitPriceAtomic: "500",
+        maxItemsCap: 15,
+        depositedAmountAtomic: "7500",
+        refundAmountAtomic: "7000",
+        depositTxHash: "0x" + "1".repeat(64),
+        payer: "0xFA8cCB3C5145fca08f22675ea740e89B1D3a317f",
+        providerPayTo: "0x9265c1c87fC5fb3C72Dc68b4D3A005dE1E22C3cf",
+      },
+      receipt: {
+        inputHash: "sha256:" + "e".repeat(64),
+        outputHash: "sha256:" + "d".repeat(64),
+        itemCount: 1,
+        paymentTxHash: "0x" + "2".repeat(64),
+        receiptTxHash: "0x" + "3".repeat(64),
+        runnerSignature: "0x" + "ef".repeat(65),
+      },
+    };
+    expect(
+      validateAgainstSchema(
+        registry.get(INVOKE_FACET_RESPONSE_V016_SCHEMA_ID)!,
+        invokeRes016,
+      ),
+    ).toEqual([]);
+
+    const apiPreviewReq: ApiPreviewRequest = {
+      method: "POST",
+      baseUrl: "https://api.example.com",
+      pathTemplate: "/v1/items",
+      auth: { kind: "BASIC", secretValue: "user:pass", secretLabel: "basic" },
+      staticHeaders: { "X-Env": "staging" },
+      requestBodyMediaType: "application/json",
+      datasetPath: "data.items",
+      inputSchema: { type: "object", properties: {} },
+      input: { body: { hello: "world" } },
+    };
+    const apiPreviewRes: ApiPreviewResponse = {
+      ok: true,
+      statusCode: 201,
+      latencyMs: 95,
+      contentType: "application/json",
+      result: { data: { items: [{ id: 1 }] } },
+      dataset: [{ id: 1 }],
+      itemCount: 1,
+      checks: {
+        httpsValid: true,
+        ssrfPassed: true,
+        authConfigured: true,
+        upstreamReachable: true,
+        jsonValid: true,
+        datasetExtracted: true,
+      },
+    };
+    expect(
+      validateAgainstSchema(
+        registry.get(API_PREVIEW_REQUEST_V016_SCHEMA_ID)!,
+        apiPreviewReq,
+      ),
+    ).toEqual([]);
+    expect(
+      validateAgainstSchema(
+        registry.get(API_PREVIEW_RESPONSE_V016_SCHEMA_ID)!,
+        apiPreviewRes,
+      ),
+    ).toEqual([]);
+
+    const createApiReq: CreateApiFacetRequest = {
+      facetName: "webhook-echo",
+      facetDisplayName: "Webhook Echo API",
+      version: "1.0.0",
+      description: "Posts JSON payloads safely.",
+      category: "developer-tools",
+      method: "POST",
+      baseUrl: "https://api.example.com",
+      pathTemplate: "/v1/echo",
+      auth: { kind: "NONE" },
+      staticHeaders: { "X-Source": "facet" },
+      requestBodyMediaType: "application/json",
+      datasetPath: "items",
+      inputSchema: { type: "object", properties: {} },
+      pricingOptions: [
+        { model: "PAY_PER_RUN", priceAtomic: "1000", isPrimary: true },
+      ],
+    };
+    const createApiPending: CreateApiFacetPendingResponse = {
+      facet: {
+        provider: "tai-hung-dev",
+        facetName: "webhook-echo",
+        facetDisplayName: "Webhook Echo API",
+        version: "1.0.0",
+        facetType: "API",
+        status: "REGISTRATION_PENDING",
+        visibility: "PRIVATE",
+        contentHash: "sha256:" + "c".repeat(64),
+      },
+    };
+    expect(
+      validateAgainstSchema(
+        registry.get(CREATE_API_FACET_REQUEST_V016_SCHEMA_ID)!,
+        createApiReq,
+      ),
+    ).toEqual([]);
+    expect(
+      validateAgainstSchema(
+        registry.get(CREATE_API_FACET_PENDING_RESPONSE_V016_SCHEMA_ID)!,
+        createApiPending,
+      ),
+    ).toEqual([]);
+
+    const endpointReq016: EndpointConfigRequestV016 = {
+      revision: 1,
+      baseUrl: "https://api.example.com",
+      auth: {
+        kind: "BASIC",
+        secretRefId: "01a1e97a-90e0-7030-b565-91c9abc3857b",
+      },
+      staticHeaders: { "X-Api-Version": "2026-11" },
+      requestBodyMediaType: "application/json",
+      datasetPath: "data.items",
+      timeoutMs: 10000,
+      maxResponseBytes: 1048576,
+      redirectPolicy: "SAME_ORIGIN",
+    };
+    expect(
+      validateAgainstSchema(
+        registry.get(ENDPOINT_CONFIG_REQUEST_V016_SCHEMA_ID)!,
+        endpointReq016,
+      ),
+    ).toEqual([]);
+
+    const validateRes016: ValidateFacetVersionResponseV016 = {
+      facetVersion: {
+        provider: "tai-hung-dev",
+        facetName: "webhook-echo",
+        version: "1.0.0",
+        status: "VALID",
+        revision: 2,
+        validation: { status: "VALID", errors: [], warnings: [] },
+        warningAcknowledgements: [],
+      },
+    };
+    expect(
+      validateAgainstSchema(
+        registry.get(VALIDATE_FACET_VERSION_RESPONSE_V016_SCHEMA_ID)!,
+        validateRes016,
+      ),
+    ).toEqual([]);
+
+    const faucetReq: FaucetClaimRequest = {
+      address: "0x9265c1c87fC5fb3C72Dc68b4D3A005dE1E22C3cf",
+    };
+    const faucetRes: FaucetClaimResponse = {
+      address: "0x9265c1c87fC5fb3C72Dc68b4D3A005dE1E22C3cf",
+      amountAtomic: "1000000",
+      balanceAtomic: "2000000",
+      txHash: "0x" + "f".repeat(64),
+      explorerUrl: "https://testnet.snowtrace.io/tx/" + "f".repeat(64),
+      nextClaimAt: "2026-11-21T01:00:00Z",
+    };
+    expect(
+      validateAgainstSchema(
+        registry.get(FAUCET_CLAIM_REQUEST_V016_SCHEMA_ID)!,
+        faucetReq,
+      ),
+    ).toEqual([]);
+    expect(
+      validateAgainstSchema(
+        registry.get(FAUCET_CLAIM_RESPONSE_V016_SCHEMA_ID)!,
+        faucetRes,
+      ),
+    ).toEqual([]);
   });
 });
